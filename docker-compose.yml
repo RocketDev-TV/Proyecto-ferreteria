@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: cochi-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/script_inicial.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend
+    container_name: cochi-backend
+    restart: always
+    ports:
+      - "${SPRING_PORT}:8080"
+    environment:
+      # Ahora Spring toma la ruta exacta según lo que haya en el .env (Local o Supabase)
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+    # depends_on: db <- (Opcional: puedes quitar esto si vas a usar Supabase 100% del tiempo, pero déjalo si usan el local)
+
+  frontend:
+    build: ./front
+    container_name: cochi-frontend
+    restart: always
+    ports:
+      - "${FRONT_PORT}:80"
+    depends_on:
+      - backend
+
+  backup-worker:
+    image: postgres:15-alpine
+    container_name: cochi-backup
+    restart: always
+    environment:
+      PGPASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./db/backups:/backups
+    command: /bin/sh -c "while true; do sleep 43200; pg_dump -h db -U ${DB_USER} ${DB_NAME} > /backups/respaldo_$$(date +%Y%m%d_%H%M%S).sql; echo 'Respaldo exitoso'; done"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

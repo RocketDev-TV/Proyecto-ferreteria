@@ -1,0 +1,41 @@
+# =========================
+# Entorno y Secretos
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Base de Datos
+# =========================
+db/backups/*
+!db/backups/.gitkeep
+
+# =========================
+# Backend (Spring Boot / Maven)
+# =========================
+backend/target/
+backend/!.mvn/wrapper/maven-wrapper.jar
+backend/log/
+backend/*.log
+
+# =========================
+# Frontend (React / Vite)
+# =========================
+front/node_modules/
+front/dist/
+front/dist-ssr/
+front/*.local
+
+# =========================
+# IDEs y SO (Windows/Mac/Linux)
+# =========================
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
