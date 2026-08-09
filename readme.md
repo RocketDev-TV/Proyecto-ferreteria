@@ -1,5 +1,14 @@
 # 🛠️ Ferretería Cochi - POS & Inventory System
 
+<div align="center">
+  <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java" />
+  <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=3ECF8E" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+</div>
+
 Sistema de Punto de Venta (POS) y Gestión de Almacén diseñado específicamente para optimizar el control de inventarios, flujo de caja y análisis de inteligencia de negocios (BI) de una ferretería.
 
 Este sistema implementa un modelo de datos robusto con control de lotes y un algoritmo de costeo **PEPS (Primeras Entradas, Primeras Salidas)** para garantizar que los márgenes de utilidad calculados en los reportes de BI sean 100% exactos frente a la fluctuación de precios de los proveedores.
@@ -72,20 +81,19 @@ git clone [https://github.com/tu-usuario/ferreteria-cochi.git](https://github.co
 ```
 
 2. Configurar la Base de Datos:
-Correr el script inicial database_schema.sql en tu instancia de PostgreSQL o Supabase.
+* Correr el script inicial database_schema.sql en tu instancia de PostgreSQL o Supabase.
 
 3. Levantar el Backend:
-Navegar a la carpeta del backend.
-Configurar las variables de entorno en application.properties (URI de la BD, JWT Secret).
-Ejecutar mediante Maven/Gradle.
+* Navegar a la carpeta del backend.
+* Configurar las variables de entorno en application.properties (URI de la BD, JWT Secret).
+* Ejecutar mediante Maven/Gradle.
 
 4. Levantar el Frontend:
-
-Navegar a la carpeta del frontend.
-Ejecutar npm install y posteriormente npm run dev.
+* Navegar a la carpeta del frontend.
+* Ejecutar npm install y posteriormente npm run dev.
 
 ## 👥 Equipo de Desarrollo:
-Aldo Alvarez
-Ignacio Herrera
+* Aldo Alvarez
+* Ignacio Herrera
 
 Hecho con ☕, código y algo de indie rock punk alternativo en la CDMX.
