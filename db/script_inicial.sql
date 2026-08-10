@@ -74,3 +74,27 @@ CREATE TABLE Detalle_Venta (
     CONSTRAINT fk_venta_detalle FOREIGN KEY (id_venta) REFERENCES Historial_Ventas(id_venta) ON DELETE CASCADE,
     CONSTRAINT fk_producto_detalle FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
 );
+
+-- ==========================================
+-- INYECCIÓN DE DATOS DE PRUEBA (CATÁLOGOS)
+-- ==========================================
+
+-- Datos para Categorias
+INSERT INTO Categorias (nombre, descripcion) VALUES 
+('Herramienta Manual', 'Martillos, desarmadores, pinzas y llaves'),
+('Herramienta Eléctrica', 'Taladros, esmeriladoras, sierras y pulidoras'),
+('Pinturas y Solventes', 'Pinturas acrílicas, esmaltes, brochas y thinner'),
+('Plomería', 'Tubos, conexiones, válvulas y grifería'),
+('Material Eléctrico', 'Cables, focos, contactos y pastillas termomagnéticas');
+
+-- Datos para Roles
+INSERT INTO Roles (tipo_rol, descripcion) VALUES 
+('ADMIN', 'Administrador total del sistema, acceso a Kárdex y reportes'),
+('CAJERO', 'Encargado de punto de venta y atención a cliente'),
+('ALMACENISTA', 'Encargado de recepción de lotes y control de stock');
+
+-- Datos para Proveedores
+INSERT INTO Proveedores (nombre, numero, correo, direccion) VALUES 
+('Truper S.A. de C.V.', '555-123-4567', 'ventas@truper.com', 'Parque Industrial, CDMX'),
+('Cemex', '555-987-6543', 'contacto@cemex.com', 'Av. Concreto 100, Monterrey'),
+('Comex', '555-456-7890', 'distribucion@comex.com.mx', 'Plaza Colores, Guadalajara');

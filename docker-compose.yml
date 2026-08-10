@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15-alpine
-    container_name: cochi-db
+    container_name: ferreteria-db
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -17,7 +15,7 @@ services:
 
   backend:
     build: ./backend
-    container_name: cochi-backend
+    container_name: ferreteria-backend
     restart: always
     ports:
       - "${SPRING_PORT}:8080"
@@ -30,8 +28,8 @@ services:
     # depends_on: db <- (Opcional: puedes quitar esto si vas a usar Supabase 100% del tiempo, pero déjalo si usan el local)
 
   frontend:
-    build: ./front
-    container_name: cochi-frontend
+    build: ./frontend
+    container_name: ferreteria-frontend
     restart: always
     ports:
       - "${FRONT_PORT}:80"
@@ -40,7 +38,7 @@ services:
 
   backup-worker:
     image: postgres:15-alpine
-    container_name: cochi-backup
+    container_name: ferreteria-backup
     restart: always
     environment:
       PGPASSWORD: ${DB_PASSWORD}
