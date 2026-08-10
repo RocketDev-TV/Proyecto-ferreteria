@@ -78,6 +78,11 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
+		<!-- Herramientas para validar DTOs -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>

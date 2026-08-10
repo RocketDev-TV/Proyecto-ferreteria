@@ -7,6 +7,7 @@ import com.ferreteria.ferreteria_backend.repositories.RolRepository;
 import com.ferreteria.ferreteria_backend.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -14,10 +15,15 @@ import java.util.List;
 @RequestMapping("/api/usuarios")
 @CrossOrigin(origins = "*")
 public class UsuarioController {
+    
     @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private RolRepository rolRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
 
-    @GetMapping public List<Usuario> obtenerTodos() { return usuarioRepository.findAll(); }
+    @GetMapping 
+    public List<Usuario> obtenerTodos() { 
+        return usuarioRepository.findAll(); 
+    }
 
     @PostMapping
     public ResponseEntity<Usuario> crearUsuario(@RequestBody UsuarioDTO dto) {
@@ -28,7 +34,9 @@ public class UsuarioController {
         nuevoUsuario.setRol(rolAsignado);
         nuevoUsuario.setNombreCompleto(dto.nombreCompleto());
         nuevoUsuario.setNombreUsuario(dto.nombreUsuario());
-        nuevoUsuario.setContrasena(dto.contrasena());
+        
+        // ¡ENCRIPTAMOS LA CONTRASEÑA ANTES DE GUARDAR!
+        nuevoUsuario.setContrasena(passwordEncoder.encode(dto.contrasena()));
         
         return ResponseEntity.ok(usuarioRepository.save(nuevoUsuario));
     }

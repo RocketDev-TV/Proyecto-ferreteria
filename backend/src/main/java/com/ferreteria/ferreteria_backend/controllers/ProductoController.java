@@ -8,6 +8,10 @@ import com.ferreteria.ferreteria_backend.repositories.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -22,13 +26,17 @@ public class ProductoController {
     @Autowired 
     private CategoriaRepository categoriaRepository;
 
+    // ==========================================
+    // GET: OBTENER PRODUCTOS PAGINADOS
+    // ==========================================
     @GetMapping 
-    public List<Producto> obtenerTodos() { 
-        return productoRepository.findAll(); 
+    public Page<Producto> obtenerTodos(@PageableDefault(size = 10) Pageable pageable) { 
+        // El findAll(pageable) hace la magia del LIMIT y OFFSET en Postgres automáticamente
+        return productoRepository.findAll(pageable); 
     }
 
     @PostMapping
-    public ResponseEntity<Producto> crearProducto(@RequestBody ProductoDTO dto) {
+    public ResponseEntity<Producto> crearProducto(@Valid @RequestBody ProductoDTO dto) {        
         // 1. Buscamos la categoría por el ID que nos mandó el DTO
         Categoria categoriaAsignada = categoriaRepository.findById(dto.idCategoria())
             .orElseThrow(() -> new RuntimeException("Error: La categoría no existe"));
@@ -49,7 +57,7 @@ public class ProductoController {
     // PUT: ACTUALIZAR UN PRODUCTO EXISTENTE
     // ==========================================
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable Integer id, @RequestBody ProductoDTO dto) {
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable Integer id, @Valid @RequestBody ProductoDTO dto) {
         // 1. Buscamos si el producto existe
         Producto productoExistente = productoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Error: Producto no encontrado"));
