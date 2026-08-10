@@ -44,4 +44,41 @@ public class ProductoController {
         // 3. Guardamos y respondemos con un 200 OK
         return ResponseEntity.ok(productoRepository.save(nuevoProducto));
     }
+
+    // ==========================================
+    // PUT: ACTUALIZAR UN PRODUCTO EXISTENTE
+    // ==========================================
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable Integer id, @RequestBody ProductoDTO dto) {
+        // 1. Buscamos si el producto existe
+        Producto productoExistente = productoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Error: Producto no encontrado"));
+
+        // 2. Buscamos la categoría nueva (o la misma)
+        Categoria categoriaAsignada = categoriaRepository.findById(dto.idCategoria())
+            .orElseThrow(() -> new RuntimeException("Error: La categoría no existe"));
+
+        // 3. Actualizamos los datos
+        productoExistente.setCategoria(categoriaAsignada);
+        productoExistente.setNombre(dto.nombre());
+        productoExistente.setDescripcion(dto.descripcion());
+        productoExistente.setPrecioVentaAct(dto.precioVentaAct());
+        productoExistente.setStockTotal(dto.stockTotal());
+
+        // 4. Guardamos los cambios
+        return ResponseEntity.ok(productoRepository.save(productoExistente));
+    }
+
+    // ==========================================
+    // DELETE: ELIMINAR UN PRODUCTO
+    // ==========================================
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarProducto(@PathVariable Integer id) {
+        // Validamos que exista antes de intentar borrarlo
+        productoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Error: Producto no encontrado"));
+            
+        productoRepository.deleteById(id);
+        return ResponseEntity.ok("Producto eliminado con éxito");
+    }
 }
