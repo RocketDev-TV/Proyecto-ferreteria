@@ -1,8 +1,14 @@
 package com.ferreteria.ferreteria_backend.controllers;
 
+import com.ferreteria.ferreteria_backend.dto.LoteAlmacenDTO;
 import com.ferreteria.ferreteria_backend.entities.LoteAlmacen;
+import com.ferreteria.ferreteria_backend.entities.Producto;
+import com.ferreteria.ferreteria_backend.entities.Proveedor;
 import com.ferreteria.ferreteria_backend.repositories.LoteAlmacenRepository;
+import com.ferreteria.ferreteria_backend.repositories.ProductoRepository;
+import com.ferreteria.ferreteria_backend.repositories.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -10,6 +16,24 @@ import java.util.List;
 @RequestMapping("/api/lotes")
 @CrossOrigin(origins = "*")
 public class LoteAlmacenController {
-    @Autowired private LoteAlmacenRepository repository;
-    @GetMapping public List<LoteAlmacen> obtenerTodos() { return repository.findAll(); }
+    @Autowired private LoteAlmacenRepository loteRepository;
+    @Autowired private ProductoRepository productoRepository;
+    @Autowired private ProveedorRepository proveedorRepository;
+
+    @GetMapping public List<LoteAlmacen> obtenerTodos() { return loteRepository.findAll(); }
+
+    @PostMapping
+    public ResponseEntity<LoteAlmacen> crearLote(@RequestBody LoteAlmacenDTO dto) {
+        Producto prod = productoRepository.findById(dto.idProducto()).orElseThrow();
+        Proveedor prov = proveedorRepository.findById(dto.idProveedor()).orElseThrow();
+        
+        LoteAlmacen lote = new LoteAlmacen();
+        lote.setProducto(prod);
+        lote.setProveedor(prov);
+        lote.setCantidadInicial(dto.cantidadInicial());
+        lote.setCantidadDisponible(dto.cantidadDisponible());
+        lote.setPrecioCompra(dto.precioCompra());
+        
+        return ResponseEntity.ok(loteRepository.save(lote));
+    }
 }
