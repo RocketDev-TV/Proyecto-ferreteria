@@ -7,6 +7,7 @@ import com.ferreteria.ferreteria_backend.entities.Proveedor;
 import com.ferreteria.ferreteria_backend.repositories.LoteAlmacenRepository;
 import com.ferreteria.ferreteria_backend.repositories.ProductoRepository;
 import com.ferreteria.ferreteria_backend.repositories.ProveedorRepository;
+import com.ferreteria.ferreteria_backend.services.InventarioService; // <-- EL IMPORT SALVADOR
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +17,26 @@ import java.util.List;
 @RequestMapping("/api/lotes")
 @CrossOrigin(origins = "*")
 public class LoteAlmacenController {
+    
     @Autowired private LoteAlmacenRepository loteRepository;
     @Autowired private ProductoRepository productoRepository;
     @Autowired private ProveedorRepository proveedorRepository;
+    @Autowired private InventarioService inventarioService;
 
-    @GetMapping public List<LoteAlmacen> obtenerTodos() { return loteRepository.findAll(); }
+    @GetMapping 
+    public List<LoteAlmacen> obtenerTodos() { 
+        return loteRepository.findAll(); 
+    }
 
     @PostMapping
     public ResponseEntity<LoteAlmacen> crearLote(@RequestBody LoteAlmacenDTO dto) {
         Producto prod = productoRepository.findById(dto.idProducto()).orElseThrow();
         Proveedor prov = proveedorRepository.findById(dto.idProveedor()).orElseThrow();
         
+        // 1. Sumamos stock
+        inventarioService.agregarStock(dto.idProducto(), dto.cantidadInicial());
+        
+        // 2. Guardamos el lote
         LoteAlmacen lote = new LoteAlmacen();
         lote.setProducto(prod);
         lote.setProveedor(prov);

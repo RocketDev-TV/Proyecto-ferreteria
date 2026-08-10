@@ -7,6 +7,7 @@ import com.ferreteria.ferreteria_backend.entities.Producto;
 import com.ferreteria.ferreteria_backend.repositories.DetalleVentaRepository;
 import com.ferreteria.ferreteria_backend.repositories.HistorialVentaRepository;
 import com.ferreteria.ferreteria_backend.repositories.ProductoRepository;
+import com.ferreteria.ferreteria_backend.services.InventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +17,26 @@ import java.util.List;
 @RequestMapping("/api/ventas/detalles")
 @CrossOrigin(origins = "*")
 public class DetalleVentaController {
+    
     @Autowired private DetalleVentaRepository detalleRepository;
     @Autowired private HistorialVentaRepository ventaRepository;
     @Autowired private ProductoRepository productoRepository;
+    @Autowired private InventarioService inventarioService;
 
-    @GetMapping public List<DetalleVenta> obtenerTodos() { return detalleRepository.findAll(); }
+    @GetMapping 
+    public List<DetalleVenta> obtenerTodos() { 
+        return detalleRepository.findAll(); 
+    }
 
     @PostMapping
     public ResponseEntity<DetalleVenta> crearDetalle(@RequestBody DetalleVentaDTO dto) {
         HistorialVenta venta = ventaRepository.findById(dto.idVenta()).orElseThrow();
         Producto producto = productoRepository.findById(dto.idProducto()).orElseThrow();
         
+        // 1. Descontamos stock
+        inventarioService.descontarStock(dto.idProducto(), dto.cantidad());
+
+        // 2. Guardamos el detalle
         DetalleVenta detalle = new DetalleVenta();
         detalle.setVenta(venta);
         detalle.setProducto(producto);
