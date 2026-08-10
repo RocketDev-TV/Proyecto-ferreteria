@@ -3,10 +3,7 @@ package com.ferreteria.ferreteria_backend.controllers;
 import com.ferreteria.ferreteria_backend.entities.Categoria;
 import com.ferreteria.ferreteria_backend.repositories.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +18,10 @@ public class CategoriaController {
     @GetMapping
     public List<Categoria> obtenerTodas() {
         return categoriaRepository.findAll();
+    }
+
+    @PostMapping
+    public Categoria crearCategoria(@RequestBody Categoria nuevaCategoria) {
+        return categoriaRepository.save(nuevaCategoria);
     }
 }

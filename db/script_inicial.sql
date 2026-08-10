@@ -98,3 +98,33 @@ INSERT INTO Proveedores (nombre, numero, correo, direccion) VALUES
 ('Truper S.A. de C.V.', '555-123-4567', 'ventas@truper.com', 'Parque Industrial, CDMX'),
 ('Cemex', '555-987-6543', 'contacto@cemex.com', 'Av. Concreto 100, Monterrey'),
 ('Comex', '555-456-7890', 'distribucion@comex.com.mx', 'Plaza Colores, Guadalajara');
+
+-- ==========================================
+-- INYECCIÓN DE DATOS DE PRUEBA (TRANSACCIONAL)
+-- ==========================================
+
+-- Datos para Usuarios (Asignando el Rol 1: ADMIN)
+-- Nota: La contraseña está en texto plano solo para pruebas locales, en prod iría el hash de BCrypt
+INSERT INTO Usuarios (id_rol, nombre_completo, nombre_usuario, contrasena) VALUES 
+(1, 'Administrador Principal', 'admin_master', 'admin123'),
+(2, 'Juan Perez', 'cajero_juan', 'cajero123');
+
+-- Datos para Productos (Asignando Categorías que ya existen)
+INSERT INTO Productos (id_categoria, nombre, descripcion, precio_venta_act, stock_total) VALUES 
+(1, 'Martillo de Uña Curva 16 oz', 'Martillo truper mango de fibra de vidrio', 185.50, 50.000),
+(2, 'Taladro Percutor 1/2', 'Taladro profesional 600W', 850.00, 15.000),
+(3, 'Pintura Blanca Vinílica 19L', 'Cubeta de pintura blanca para interiores', 1200.00, 10.000);
+
+-- Datos para Lotes de Almacén (Simulando la entrada de mercancía de los proveedores)
+INSERT INTO Lotes_Almacen (id_producto, id_proveedor, cantidad_inicial, cantidad_disponible, precio_compra) VALUES 
+(1, 1, 50.000, 50.000, 120.00), -- Martillos surtidos por Truper
+(3, 3, 10.000, 10.000, 800.00); -- Pinturas surtidas por Comex
+
+-- Datos para Historial_Ventas (Un ticket de venta del cajero 2)
+INSERT INTO Historial_Ventas (id_usuario, total_venta) VALUES 
+(2, 1035.50);
+
+-- Datos para Detalle_Venta (Lo que trae adentro el ticket anterior)
+INSERT INTO Detalle_Venta (id_venta, id_producto, cantidad, precio_unitario, precio_compra_historico, subtotal) VALUES 
+(1, 1, 1.000, 185.50, 120.00, 185.50), -- 1 Martillo
+(1, 2, 1.000, 850.00, 600.00, 850.00); -- 1 Taladro
