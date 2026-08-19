@@ -17,15 +17,16 @@ Este sistema implementa un modelo de datos robusto con control de lotes y un alg
 
 ## 💻 Stack Tecnológico
 
-**Arquitectura General:** Patrón MVC (Modelo-Vista-Controlador) Desacoplado.
+**Arquitectura General:** Patrón API RESTful Desacoplada (Frontend / Backend).
 
-*   **Backend:** Java / Spring Boot 
-    *   *Seguridad:* Spring Security con JWT y encriptación BCrypt para contraseñas.
-    *   *Persistencia:* Spring Data JPA / Hibernate.
-*   **Frontend:** React (SPA)
-    *   *Gestión de estado:* (Redux o Context API para el carrito de compras temporal).
-*   **Base de Datos:** PostgreSQL (Hosteado vía Supabase)
-*   **Control de Versiones y Despliegue:** Git, GitHub, Docker (para contenerización local/producción).
+*   **Backend:** Java 21 / Spring Boot 3+
+    *   *Seguridad:* Spring Security con JWT (JSON Web Tokens) y encriptación BCrypt.
+    *   *Persistencia:* Spring Data JPA / PostgreSQL.
+    *   *Ingeniería:* Uso extensivo de DTOs (Records), Paginación nativa, e Interceptores Globales de Excepciones (`@RestControllerAdvice`).
+*   **Frontend:** React 19 + Vite (SPA)
+    *   *Integración:* Consumo de API securizada mediante tokens JWT.
+*   **Base de Datos:** PostgreSQL
+*   **DevOps & Despliegue:** Docker, Docker Compose (con workers de backup automatizados).
 
 ---
 
@@ -33,27 +34,25 @@ Este sistema implementa un modelo de datos robusto con control de lotes y un alg
 
 El proyecto está dividido en dos grandes ecosistemas para mantener la escalabilidad y facilitar el trabajo concurrente.
 
-### 1. Sistema Backend (`/backend-spring`)
+### 1. Sistema Backend (`/backend`)
 ```text
-src/main/java/com/ferreteria/cochi/
-├── config/         # Configuraciones de CORS, JWT y Spring Security
+src/main/java/com/ferreteria/ferreteria_backend/
 ├── controllers/    # Endpoints REST (Auth, Ventas, Productos, Almacen)
-├── dtos/           # Objetos de transferencia de datos (Ej. Carrito de Ventas)
-├── entities/       # Modelos JPA mapeados a la BD (Usuarios, Productos, Lotes)
-├── repositories/   # Interfaces de acceso a datos (Spring Data)
-├── services/       # Lógica de negocio (Algoritmo PEPS, transaccionalidad)
-└── utils/          # Helpers, generadores de reportes, etc.
+├── dto/            # Data Transfer Objects (Records para payloads ligeros y validados)
+├── entities/       # Modelos JPA mapeados a la base de datos
+├── exceptions/     # Manejo global de errores (Respuestas JSON limpias)
+├── repositories/   # Interfaces de acceso a datos
+├── security/       # Filtros JWT, Generador de Tokens y Configuración de Accesos
+└── services/       # Lógica de negocio transaccional (Ej. InventarioService)
 ```
 
 ### 2. Sistema Frontend (/frontend-react)
 ```text
 src/
-├── assets/         # Imágenes, iconos y estilos globales
-├── components/     # Componentes reutilizables (Botones, Tablas, Modales)
-├── context/        # Manejo de sesión global y estado del carrito
-├── hooks/          # Custom hooks para llamadas a la API
-├── pages/          # Vistas principales (Dashboard, PuntoDeVenta, Inventario)
-└── services/       # Configuraciones de Axios/Fetch apuntando al Backend
+├── assets/         # Imágenes, iconos y recursos estáticos
+├── components/     # (Por implementar) Componentes UI reutilizables
+├── pages/          # (Por implementar) Vistas principales (Login, POS, Dashboard)
+└── App.jsx         # Punto de entrada y enrutador principal
 ```
 
 ## 📦 Módulos Principales

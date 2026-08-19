@@ -1,0 +1,2841 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+backend/
+  .mvn/
+    wrapper/
+      maven-wrapper.properties
+  src/
+    main/
+      java/
+        com/
+          ferreteria/
+            ferreteria_backend/
+              controllers/
+                AuthController.java
+                CategoriaController.java
+                DetalleVentaController.java
+                HistorialVentaController.java
+                LoteAlmacenController.java
+                ProductoController.java
+                ProveedorController.java
+                RolController.java
+                UsuarioController.java
+              dto/
+                AuthDTO.java
+                DetalleVentaDTO.java
+                HistorialVentaDTO.java
+                LoteAlmacenDTO.java
+                ProductoDTO.java
+                UsuarioDTO.java
+              entities/
+                Categoria.java
+                DetalleVenta.java
+                HistorialVenta.java
+                LoteAlmacen.java
+                Producto.java
+                Proveedor.java
+                Rol.java
+                Usuario.java
+              exceptions/
+                GlobalExceptionHandler.java
+              repositories/
+                CategoriaRepository.java
+                DetalleVentaRepository.java
+                HistorialVentaRepository.java
+                LoteAlmacenRepository.java
+                ProductoRepository.java
+                ProveedorRepository.java
+                RolRepository.java
+                UsuarioRepository.java
+              security/
+                JwtFilter.java
+                JwtUtil.java
+                SecurityConfig.java
+              services/
+                InventarioService.java
+              FerreteriaBackendApplication.java
+      resources/
+        application.properties
+    test/
+      java/
+        com/
+          ferreteria/
+            ferreteria_backend/
+              FerreteriaBackendApplicationTests.java
+  .gitattributes
+  .gitignore
+  Dockerfile
+  mvnw
+  mvnw.cmd
+  pom.xml
+db/
+  Diagrama-db.png
+  script_inicial.sql
+frontend/
+  public/
+    favicon.svg
+    icons.svg
+  src/
+    assets/
+      hero.png
+      react.svg
+      vite.svg
+    App.css
+    App.jsx
+    index.css
+    main.jsx
+  .gitignore
+  Dockerfile
+  eslint.config.js
+  index.html
+  package.json
+  README.md
+  vite.config.js
+.gitignore
+docker-compose.yml
+readme.md
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="backend/.mvn/wrapper/maven-wrapper.properties">
+wrapperVersion=3.3.4
+distributionType=only-script
+distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.16/apache-maven-3.9.16-bin.zip
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/controllers/ProveedorController.java">
+package com.ferreteria.ferreteria_backend.controllers;
+
+import com.ferreteria.ferreteria_backend.entities.Proveedor;
+import com.ferreteria.ferreteria_backend.repositories.ProveedorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/proveedores")
+@CrossOrigin(origins = "*")
+public class ProveedorController {
+    @Autowired private ProveedorRepository repository;
+    @GetMapping public List<Proveedor> obtenerTodos() { return repository.findAll(); }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/controllers/RolController.java">
+package com.ferreteria.ferreteria_backend.controllers;
+
+import com.ferreteria.ferreteria_backend.entities.Rol;
+import com.ferreteria.ferreteria_backend.repositories.RolRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/roles")
+@CrossOrigin(origins = "*")
+public class RolController {
+    @Autowired private RolRepository repository;
+    @GetMapping public List<Rol> obtenerTodos() { return repository.findAll(); }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/dto/AuthDTO.java">
+package com.ferreteria.ferreteria_backend.dto;
+public record AuthDTO(String nombreUsuario, String contrasena) {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/dto/DetalleVentaDTO.java">
+package com.ferreteria.ferreteria_backend.dto;
+import java.math.BigDecimal;
+
+public record DetalleVentaDTO(
+    Integer idVenta, 
+    Integer idProducto, 
+    BigDecimal cantidad, 
+    BigDecimal precioUnitario, 
+    BigDecimal precioCompraHistorico, 
+    BigDecimal subtotal
+) {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/dto/HistorialVentaDTO.java">
+package com.ferreteria.ferreteria_backend.dto;
+import java.math.BigDecimal;
+
+public record HistorialVentaDTO(
+    Integer idUsuario, 
+    BigDecimal totalVenta
+) {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/dto/LoteAlmacenDTO.java">
+package com.ferreteria.ferreteria_backend.dto;
+import java.math.BigDecimal;
+
+public record LoteAlmacenDTO(
+    Integer idProducto, 
+    Integer idProveedor, 
+    BigDecimal cantidadInicial, 
+    BigDecimal cantidadDisponible, 
+    BigDecimal precioCompra
+) {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/dto/UsuarioDTO.java">
+package com.ferreteria.ferreteria_backend.dto;
+
+public record UsuarioDTO(
+    Integer idRol, 
+    String nombreCompleto, 
+    String nombreUsuario, 
+    String contrasena
+) {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/entities/Categoria.java">
+package com.ferreteria.ferreteria_backend.entities;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Categorias")
+public class Categoria {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_categoria")
+    private Integer idCategoria;
+
+    @Column(name = "nombre", nullable = false, length = 70)
+    private String nombre;
+
+    @Column(name = "descripcion", nullable = false, length = 150)
+    private String descripcion;
+
+    // Constructor vacío por defecto (requerido por JPA)
+    public Categoria() {
+    }
+
+    // Getters y Setters
+    public Integer getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(Integer idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/entities/DetalleVenta.java">
+package com.ferreteria.ferreteria_backend.entities;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "Detalle_Venta")
+public class DetalleVenta {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_detalle")
+    private Integer idDetalle;
+
+    @ManyToOne
+    @JoinColumn(name = "id_venta", nullable = false)
+    private HistorialVenta venta;
+
+    @ManyToOne
+    @JoinColumn(name = "id_producto", nullable = false)
+    private Producto producto;
+
+    @Column(name = "cantidad", nullable = false, precision = 10, scale = 3)
+    private BigDecimal cantidad;
+
+    @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioUnitario;
+
+    @Column(name = "precio_compra_historico", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioCompraHistorico;
+
+    @Column(name = "subtotal", nullable = false, precision = 10, scale = 2)
+    private BigDecimal subtotal;
+
+    public DetalleVenta() {}
+
+    // Getters y Setters
+    public Integer getIdDetalle() { return idDetalle; }
+    public void setIdDetalle(Integer idDetalle) { this.idDetalle = idDetalle; }
+    public HistorialVenta getVenta() { return venta; }
+    public void setVenta(HistorialVenta venta) { this.venta = venta; }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
+    public BigDecimal getCantidad() { return cantidad; }
+    public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
+    public BigDecimal getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(BigDecimal precioUnitario) { this.precioUnitario = precioUnitario; }
+    public BigDecimal getPrecioCompraHistorico() { return precioCompraHistorico; }
+    public void setPrecioCompraHistorico(BigDecimal precioCompraHistorico) { this.precioCompraHistorico = precioCompraHistorico; }
+    public BigDecimal getSubtotal() { return subtotal; }
+    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/entities/HistorialVenta.java">
+package com.ferreteria.ferreteria_backend.entities;
+
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "Historial_Ventas")
+public class HistorialVenta {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_venta")
+    private Integer idVenta;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
+    @CreationTimestamp
+    @Column(name = "fecha_venta", nullable = false, updatable = false)
+    private LocalDateTime fechaVenta;
+
+    @Column(name = "total_venta", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalVenta;
+
+    public HistorialVenta() {}
+
+    // Getters y Setters
+    public Integer getIdVenta() { return idVenta; }
+    public void setIdVenta(Integer idVenta) { this.idVenta = idVenta; }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public LocalDateTime getFechaVenta() { return fechaVenta; }
+    public void setFechaVenta(LocalDateTime fechaVenta) { this.fechaVenta = fechaVenta; }
+    public BigDecimal getTotalVenta() { return totalVenta; }
+    public void setTotalVenta(BigDecimal totalVenta) { this.totalVenta = totalVenta; }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/entities/LoteAlmacen.java">
+package com.ferreteria.ferreteria_backend.entities;
+
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "Lotes_Almacen")
+public class LoteAlmacen {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_lote")
+    private Integer idLote;
+
+    @ManyToOne
+    @JoinColumn(name = "id_producto", nullable = false)
+    private Producto producto;
+
+    @ManyToOne
+    @JoinColumn(name = "id_proveedor", nullable = false)
+    private Proveedor proveedor;
+
+    @Column(name = "cantidad_inicial", nullable = false, precision = 10, scale = 3)
+    private BigDecimal cantidadInicial;
+
+    @Column(name = "cantidad_disponible", nullable = false, precision = 10, scale = 3)
+    private BigDecimal cantidadDisponible;
+
+    @Column(name = "precio_compra", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioCompra;
+
+    @CreationTimestamp
+    @Column(name = "fecha_registro", nullable = false, updatable = false)
+    private LocalDateTime fechaRegistro;
+
+    public LoteAlmacen() {}
+
+    // Getters y Setters
+    public Integer getIdLote() { return idLote; }
+    public void setIdLote(Integer idLote) { this.idLote = idLote; }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
+    public Proveedor getProveedor() { return proveedor; }
+    public void setProveedor(Proveedor proveedor) { this.proveedor = proveedor; }
+    public BigDecimal getCantidadInicial() { return cantidadInicial; }
+    public void setCantidadInicial(BigDecimal cantidadInicial) { this.cantidadInicial = cantidadInicial; }
+    public BigDecimal getCantidadDisponible() { return cantidadDisponible; }
+    public void setCantidadDisponible(BigDecimal cantidadDisponible) { this.cantidadDisponible = cantidadDisponible; }
+    public BigDecimal getPrecioCompra() { return precioCompra; }
+    public void setPrecioCompra(BigDecimal precioCompra) { this.precioCompra = precioCompra; }
+    public LocalDateTime getFechaRegistro() { return fechaRegistro; }
+    public void setFechaRegistro(LocalDateTime fechaRegistro) { this.fechaRegistro = fechaRegistro; }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/entities/Producto.java">
+package com.ferreteria.ferreteria_backend.entities;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "Productos")
+public class Producto {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_producto")
+    private Integer idProducto;
+
+    // Mapeo de la llave foránea fk_categoria
+    @ManyToOne
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
+
+    @Column(name = "nombre", nullable = false, length = 70)
+    private String nombre;
+
+    @Column(name = "descripcion", columnDefinition = "TEXT")
+    private String descripcion;
+
+    @Column(name = "precio_venta_act", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioVentaAct;
+
+    @Column(name = "stock_total", nullable = false, precision = 10, scale = 3)
+    private BigDecimal stockTotal;
+
+    public Producto() {}
+
+    // Getters y Setters
+    public Integer getIdProducto() { return idProducto; }
+    public void setIdProducto(Integer idProducto) { this.idProducto = idProducto; }
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public BigDecimal getPrecioVentaAct() { return precioVentaAct; }
+    public void setPrecioVentaAct(BigDecimal precioVentaAct) { this.precioVentaAct = precioVentaAct; }
+    public BigDecimal getStockTotal() { return stockTotal; }
+    public void setStockTotal(BigDecimal stockTotal) { this.stockTotal = stockTotal; }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/entities/Proveedor.java">
+package com.ferreteria.ferreteria_backend.entities;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Proveedores")
+public class Proveedor {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_proveedor")
+    private Integer idProveedor;
+
+    @Column(name = "nombre", nullable = false, length = 70)
+    private String nombre;
+
+    @Column(name = "numero", nullable = false, length = 20)
+    private String numero;
+
+    @Column(name = "correo", length = 100)
+    private String correo;
+
+    @Column(name = "direccion", columnDefinition = "TEXT")
+    private String direccion;
+
+    public Proveedor() {}
+
+    // Getters y Setters
+    public Integer getIdProveedor() { return idProveedor; }
+    public void setIdProveedor(Integer idProveedor) { this.idProveedor = idProveedor; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
+    public String getCorreo() { return correo; }
+    public void setCorreo(String correo) { this.correo = correo; }
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/entities/Rol.java">
+package com.ferreteria.ferreteria_backend.entities;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Roles")
+public class Rol {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_rol")
+    private Integer idRol;
+
+    @Column(name = "tipo_rol", nullable = false, length = 50)
+    private String tipoRol;
+
+    @Column(name = "descripcion", length = 150)
+    private String descripcion;
+
+    public Rol() {}
+
+    // Getters y Setters
+    public Integer getIdRol() { return idRol; }
+    public void setIdRol(Integer idRol) { this.idRol = idRol; }
+    public String getTipoRol() { return tipoRol; }
+    public void setTipoRol(String tipoRol) { this.tipoRol = tipoRol; }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/entities/Usuario.java">
+package com.ferreteria.ferreteria_backend.entities;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Usuarios")
+public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
+    private Integer idUsuario;
+
+    // Aquí mapeamos la llave foránea fk_rol
+    @ManyToOne
+    @JoinColumn(name = "id_rol", nullable = false)
+    private Rol rol;
+
+    @Column(name = "nombre_completo", nullable = false, length = 70)
+    private String nombreCompleto;
+
+    @Column(name = "nombre_usuario", nullable = false, unique = true, length = 70)
+    private String nombreUsuario;
+
+    @Column(name = "contrasena", nullable = false, length = 255)
+    private String contrasena;
+
+    public Usuario() {}
+
+    // Getters y Setters
+    public Integer getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }
+    public Rol getRol() { return rol; }
+    public void setRol(Rol rol) { this.rol = rol; }
+    public String getNombreCompleto() { return nombreCompleto; }
+    public void setNombreCompleto(String nombreCompleto) { this.nombreCompleto = nombreCompleto; }
+    public String getNombreUsuario() { return nombreUsuario; }
+    public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario; }
+    public String getContrasena() { return contrasena; }
+    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/exceptions/GlobalExceptionHandler.java">
+package com.ferreteria.ferreteria_backend.exceptions;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import java.util.HashMap;
+import java.util.Map;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    // Atrapa los errores de validación de los DTOs y los convierte en un JSON bonito
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> manejarValidaciones(MethodArgumentNotValidException ex) {
+        Map<String, String> errores = new HashMap<>();
+        
+        ex.getBindingResult().getFieldErrors().forEach(error -> 
+            errores.put(error.getField(), error.getDefaultMessage()));
+            
+        return ResponseEntity.badRequest().body(errores);
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/repositories/CategoriaRepository.java">
+package com.ferreteria.ferreteria_backend.repositories;
+
+import com.ferreteria.ferreteria_backend.entities.Categoria;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/repositories/DetalleVentaRepository.java">
+package com.ferreteria.ferreteria_backend.repositories;
+import com.ferreteria.ferreteria_backend.entities.DetalleVenta;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface DetalleVentaRepository extends JpaRepository<DetalleVenta, Integer> {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/repositories/HistorialVentaRepository.java">
+package com.ferreteria.ferreteria_backend.repositories;
+import com.ferreteria.ferreteria_backend.entities.HistorialVenta;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface HistorialVentaRepository extends JpaRepository<HistorialVenta, Integer> {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/repositories/LoteAlmacenRepository.java">
+package com.ferreteria.ferreteria_backend.repositories;
+import com.ferreteria.ferreteria_backend.entities.LoteAlmacen;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface LoteAlmacenRepository extends JpaRepository<LoteAlmacen, Integer> {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/repositories/ProductoRepository.java">
+package com.ferreteria.ferreteria_backend.repositories;
+import com.ferreteria.ferreteria_backend.entities.Producto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ProductoRepository extends JpaRepository<Producto, Integer> {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/repositories/ProveedorRepository.java">
+package com.ferreteria.ferreteria_backend.repositories;
+import com.ferreteria.ferreteria_backend.entities.Proveedor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ProveedorRepository extends JpaRepository<Proveedor, Integer> {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/repositories/RolRepository.java">
+package com.ferreteria.ferreteria_backend.repositories;
+import com.ferreteria.ferreteria_backend.entities.Rol;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface RolRepository extends JpaRepository<Rol, Integer> {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/security/JwtFilter.java">
+package com.ferreteria.ferreteria_backend.security;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+
+@Component
+public class JwtFilter extends OncePerRequestFilter {
+
+    @Autowired private JwtUtil jwtUtil;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+            
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        String username = null;
+
+        // Revisamos si trae el token en la cabecera
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            try { username = jwtUtil.extraerUsuario(token); } 
+            catch (Exception e) { /* Token inválido, se ignora */ }
+        }
+
+        // Si el token es válido, le abrimos la puerta en el contexto de Spring Security
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (jwtUtil.validarToken(token)) {
+                UsernamePasswordAuthenticationToken authToken = 
+                    new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        chain.doFilter(request, response);
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/security/JwtUtil.java">
+package com.ferreteria.ferreteria_backend.security;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
+import java.security.Key;
+import java.util.Date;
+
+@Component
+public class JwtUtil {
+    private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+    public String generarToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Dura 10 horas
+                .signWith(SECRET_KEY)
+                .compact();
+    }
+
+    public String extraerUsuario(String token) {
+        return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public boolean validarToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false; // Si caducó o lo inventaron, rebota
+        }
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/services/InventarioService.java">
+package com.ferreteria.ferreteria_backend.services;
+
+import com.ferreteria.ferreteria_backend.entities.Producto;
+import com.ferreteria.ferreteria_backend.repositories.ProductoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.math.BigDecimal;
+
+@Service
+public class InventarioService {
+
+    @Autowired
+    private ProductoRepository productoRepository;
+
+    @Transactional
+    public void descontarStock(Integer idProducto, BigDecimal cantidadVendida) {
+        Producto producto = productoRepository.findById(idProducto)
+            .orElseThrow(() -> new RuntimeException("Error: Producto no encontrado"));
+            
+        // Validamos que haya suficiente stock
+        if (producto.getStockTotal().compareTo(cantidadVendida) < 0) {
+            throw new RuntimeException("¡Pum! Stock insuficiente para el producto: " + producto.getNombre());
+        }
+        
+        // Restamos la cantidad
+        producto.setStockTotal(producto.getStockTotal().subtract(cantidadVendida));
+        productoRepository.save(producto);
+    }
+
+    @Transactional
+    public void agregarStock(Integer idProducto, BigDecimal cantidadEntrante) {
+        Producto producto = productoRepository.findById(idProducto)
+            .orElseThrow(() -> new RuntimeException("Error: Producto no encontrado"));
+            
+        // Sumamos la cantidad
+        producto.setStockTotal(producto.getStockTotal().add(cantidadEntrante));
+        productoRepository.save(producto);
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/FerreteriaBackendApplication.java">
+package com.ferreteria.ferreteria_backend;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class FerreteriaBackendApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(FerreteriaBackendApplication.class, args);
+	}
+
+}
+</file>
+
+<file path="backend/src/test/java/com/ferreteria/ferreteria_backend/FerreteriaBackendApplicationTests.java">
+package com.ferreteria.ferreteria_backend;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class FerreteriaBackendApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
+</file>
+
+<file path="backend/.gitattributes">
+/mvnw text eol=lf
+*.cmd text eol=crlf
+</file>
+
+<file path="backend/.gitignore">
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+</file>
+
+<file path="backend/mvnw">
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup batch script, version 3.3.4
+#
+# Optional ENV vars
+# -----------------
+#   JAVA_HOME - location of a JDK home dir, required when download maven via java source
+#   MVNW_REPOURL - repo url base for downloading maven distribution
+#   MVNW_USERNAME/MVNW_PASSWORD - user and password for downloading maven
+#   MVNW_VERBOSE - true: enable verbose log; debug: trace the mvnw script; others: silence the output
+# ----------------------------------------------------------------------------
+
+set -euf
+[ "${MVNW_VERBOSE-}" != debug ] || set -x
+
+# OS specific support.
+native_path() { printf %s\\n "$1"; }
+case "$(uname)" in
+CYGWIN* | MINGW*)
+  [ -z "${JAVA_HOME-}" ] || JAVA_HOME="$(cygpath --unix "$JAVA_HOME")"
+  native_path() { cygpath --path --windows "$1"; }
+  ;;
+esac
+
+# set JAVACMD and JAVACCMD
+set_java_home() {
+  # For Cygwin and MinGW, ensure paths are in Unix format before anything is touched
+  if [ -n "${JAVA_HOME-}" ]; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ]; then
+      # IBM's JDK on AIX uses strange locations for the executables
+      JAVACMD="$JAVA_HOME/jre/sh/java"
+      JAVACCMD="$JAVA_HOME/jre/sh/javac"
+    else
+      JAVACMD="$JAVA_HOME/bin/java"
+      JAVACCMD="$JAVA_HOME/bin/javac"
+
+      if [ ! -x "$JAVACMD" ] || [ ! -x "$JAVACCMD" ]; then
+        echo "The JAVA_HOME environment variable is not defined correctly, so mvnw cannot run." >&2
+        echo "JAVA_HOME is set to \"$JAVA_HOME\", but \"\$JAVA_HOME/bin/java\" or \"\$JAVA_HOME/bin/javac\" does not exist." >&2
+        return 1
+      fi
+    fi
+  else
+    JAVACMD="$(
+      'set' +e
+      'unset' -f command 2>/dev/null
+      'command' -v java
+    )" || :
+    JAVACCMD="$(
+      'set' +e
+      'unset' -f command 2>/dev/null
+      'command' -v javac
+    )" || :
+
+    if [ ! -x "${JAVACMD-}" ] || [ ! -x "${JAVACCMD-}" ]; then
+      echo "The java/javac command does not exist in PATH nor is JAVA_HOME set, so mvnw cannot run." >&2
+      return 1
+    fi
+  fi
+}
+
+# hash string like Java String::hashCode
+hash_string() {
+  str="${1:-}" h=0
+  while [ -n "$str" ]; do
+    char="${str%"${str#?}"}"
+    h=$(((h * 31 + $(LC_CTYPE=C printf %d "'$char")) % 4294967296))
+    str="${str#?}"
+  done
+  printf %x\\n $h
+}
+
+verbose() { :; }
+[ "${MVNW_VERBOSE-}" != true ] || verbose() { printf %s\\n "${1-}"; }
+
+die() {
+  printf %s\\n "$1" >&2
+  exit 1
+}
+
+trim() {
+  # MWRAPPER-139:
+  #   Trims trailing and leading whitespace, carriage returns, tabs, and linefeeds.
+  #   Needed for removing poorly interpreted newline sequences when running in more
+  #   exotic environments such as mingw bash on Windows.
+  printf "%s" "${1}" | tr -d '[:space:]'
+}
+
+scriptDir="$(dirname "$0")"
+scriptName="$(basename "$0")"
+
+# parse distributionUrl and optional distributionSha256Sum, requires .mvn/wrapper/maven-wrapper.properties
+while IFS="=" read -r key value; do
+  case "${key-}" in
+  distributionUrl) distributionUrl=$(trim "${value-}") ;;
+  distributionSha256Sum) distributionSha256Sum=$(trim "${value-}") ;;
+  esac
+done <"$scriptDir/.mvn/wrapper/maven-wrapper.properties"
+[ -n "${distributionUrl-}" ] || die "cannot read distributionUrl property in $scriptDir/.mvn/wrapper/maven-wrapper.properties"
+
+case "${distributionUrl##*/}" in
+maven-mvnd-*bin.*)
+  MVN_CMD=mvnd.sh _MVNW_REPO_PATTERN=/maven/mvnd/
+  case "${PROCESSOR_ARCHITECTURE-}${PROCESSOR_ARCHITEW6432-}:$(uname -a)" in
+  *AMD64:CYGWIN* | *AMD64:MINGW*) distributionPlatform=windows-amd64 ;;
+  :Darwin*x86_64) distributionPlatform=darwin-amd64 ;;
+  :Darwin*arm64) distributionPlatform=darwin-aarch64 ;;
+  :Linux*x86_64*) distributionPlatform=linux-amd64 ;;
+  *)
+    echo "Cannot detect native platform for mvnd on $(uname)-$(uname -m), use pure java version" >&2
+    distributionPlatform=linux-amd64
+    ;;
+  esac
+  distributionUrl="${distributionUrl%-bin.*}-$distributionPlatform.zip"
+  ;;
+maven-mvnd-*) MVN_CMD=mvnd.sh _MVNW_REPO_PATTERN=/maven/mvnd/ ;;
+*) MVN_CMD="mvn${scriptName#mvnw}" _MVNW_REPO_PATTERN=/org/apache/maven/ ;;
+esac
+
+# apply MVNW_REPOURL and calculate MAVEN_HOME
+# maven home pattern: ~/.m2/wrapper/dists/{apache-maven-<version>,maven-mvnd-<version>-<platform>}/<hash>
+[ -z "${MVNW_REPOURL-}" ] || distributionUrl="$MVNW_REPOURL$_MVNW_REPO_PATTERN${distributionUrl#*"$_MVNW_REPO_PATTERN"}"
+distributionUrlName="${distributionUrl##*/}"
+distributionUrlNameMain="${distributionUrlName%.*}"
+distributionUrlNameMain="${distributionUrlNameMain%-bin}"
+MAVEN_USER_HOME="${MAVEN_USER_HOME:-${HOME}/.m2}"
+MAVEN_HOME="${MAVEN_USER_HOME}/wrapper/dists/${distributionUrlNameMain-}/$(hash_string "$distributionUrl")"
+
+exec_maven() {
+  unset MVNW_VERBOSE MVNW_USERNAME MVNW_PASSWORD MVNW_REPOURL || :
+  exec "$MAVEN_HOME/bin/$MVN_CMD" "$@" || die "cannot exec $MAVEN_HOME/bin/$MVN_CMD"
+}
+
+if [ -d "$MAVEN_HOME" ]; then
+  verbose "found existing MAVEN_HOME at $MAVEN_HOME"
+  exec_maven "$@"
+fi
+
+case "${distributionUrl-}" in
+*?-bin.zip | *?maven-mvnd-?*-?*.zip) ;;
+*) die "distributionUrl is not valid, must match *-bin.zip or maven-mvnd-*.zip, but found '${distributionUrl-}'" ;;
+esac
+
+# prepare tmp dir
+if TMP_DOWNLOAD_DIR="$(mktemp -d)" && [ -d "$TMP_DOWNLOAD_DIR" ]; then
+  clean() { rm -rf -- "$TMP_DOWNLOAD_DIR"; }
+  trap clean HUP INT TERM EXIT
+else
+  die "cannot create temp dir"
+fi
+
+mkdir -p -- "${MAVEN_HOME%/*}"
+
+# Download and Install Apache Maven
+verbose "Couldn't find MAVEN_HOME, downloading and installing it ..."
+verbose "Downloading from: $distributionUrl"
+verbose "Downloading to: $TMP_DOWNLOAD_DIR/$distributionUrlName"
+
+# select .zip or .tar.gz
+if ! command -v unzip >/dev/null; then
+  distributionUrl="${distributionUrl%.zip}.tar.gz"
+  distributionUrlName="${distributionUrl##*/}"
+fi
+
+# verbose opt
+__MVNW_QUIET_WGET=--quiet __MVNW_QUIET_CURL=--silent __MVNW_QUIET_UNZIP=-q __MVNW_QUIET_TAR=''
+[ "${MVNW_VERBOSE-}" != true ] || __MVNW_QUIET_WGET='' __MVNW_QUIET_CURL='' __MVNW_QUIET_UNZIP='' __MVNW_QUIET_TAR=v
+
+# normalize http auth
+case "${MVNW_PASSWORD:+has-password}" in
+'') MVNW_USERNAME='' MVNW_PASSWORD='' ;;
+has-password) [ -n "${MVNW_USERNAME-}" ] || MVNW_USERNAME='' MVNW_PASSWORD='' ;;
+esac
+
+if [ -z "${MVNW_USERNAME-}" ] && command -v wget >/dev/null; then
+  verbose "Found wget ... using wget"
+  wget ${__MVNW_QUIET_WGET:+"$__MVNW_QUIET_WGET"} "$distributionUrl" -O "$TMP_DOWNLOAD_DIR/$distributionUrlName" || die "wget: Failed to fetch $distributionUrl"
+elif [ -z "${MVNW_USERNAME-}" ] && command -v curl >/dev/null; then
+  verbose "Found curl ... using curl"
+  curl ${__MVNW_QUIET_CURL:+"$__MVNW_QUIET_CURL"} -f -L -o "$TMP_DOWNLOAD_DIR/$distributionUrlName" "$distributionUrl" || die "curl: Failed to fetch $distributionUrl"
+elif set_java_home; then
+  verbose "Falling back to use Java to download"
+  javaSource="$TMP_DOWNLOAD_DIR/Downloader.java"
+  targetZip="$TMP_DOWNLOAD_DIR/$distributionUrlName"
+  cat >"$javaSource" <<-END
+	public class Downloader extends java.net.Authenticator
+	{
+	  protected java.net.PasswordAuthentication getPasswordAuthentication()
+	  {
+	    return new java.net.PasswordAuthentication( System.getenv( "MVNW_USERNAME" ), System.getenv( "MVNW_PASSWORD" ).toCharArray() );
+	  }
+	  public static void main( String[] args ) throws Exception
+	  {
+	    setDefault( new Downloader() );
+	    java.nio.file.Files.copy( java.net.URI.create( args[0] ).toURL().openStream(), java.nio.file.Paths.get( args[1] ).toAbsolutePath().normalize() );
+	  }
+	}
+	END
+  # For Cygwin/MinGW, switch paths to Windows format before running javac and java
+  verbose " - Compiling Downloader.java ..."
+  "$(native_path "$JAVACCMD")" "$(native_path "$javaSource")" || die "Failed to compile Downloader.java"
+  verbose " - Running Downloader.java ..."
+  "$(native_path "$JAVACMD")" -cp "$(native_path "$TMP_DOWNLOAD_DIR")" Downloader "$distributionUrl" "$(native_path "$targetZip")"
+fi
+
+# If specified, validate the SHA-256 sum of the Maven distribution zip file
+if [ -n "${distributionSha256Sum-}" ]; then
+  distributionSha256Result=false
+  if [ "$MVN_CMD" = mvnd.sh ]; then
+    echo "Checksum validation is not supported for maven-mvnd." >&2
+    echo "Please disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties." >&2
+    exit 1
+  elif command -v sha256sum >/dev/null; then
+    if echo "$distributionSha256Sum  $TMP_DOWNLOAD_DIR/$distributionUrlName" | sha256sum -c - >/dev/null 2>&1; then
+      distributionSha256Result=true
+    fi
+  elif command -v shasum >/dev/null; then
+    if echo "$distributionSha256Sum  $TMP_DOWNLOAD_DIR/$distributionUrlName" | shasum -a 256 -c >/dev/null 2>&1; then
+      distributionSha256Result=true
+    fi
+  else
+    echo "Checksum validation was requested but neither 'sha256sum' or 'shasum' are available." >&2
+    echo "Please install either command, or disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties." >&2
+    exit 1
+  fi
+  if [ $distributionSha256Result = false ]; then
+    echo "Error: Failed to validate Maven distribution SHA-256, your Maven distribution might be compromised." >&2
+    echo "If you updated your Maven version, you need to update the specified distributionSha256Sum property." >&2
+    exit 1
+  fi
+fi
+
+# unzip and move
+if command -v unzip >/dev/null; then
+  unzip ${__MVNW_QUIET_UNZIP:+"$__MVNW_QUIET_UNZIP"} "$TMP_DOWNLOAD_DIR/$distributionUrlName" -d "$TMP_DOWNLOAD_DIR" || die "failed to unzip"
+else
+  tar xzf${__MVNW_QUIET_TAR:+"$__MVNW_QUIET_TAR"} "$TMP_DOWNLOAD_DIR/$distributionUrlName" -C "$TMP_DOWNLOAD_DIR" || die "failed to untar"
+fi
+
+# Find the actual extracted directory name (handles snapshots where filename != directory name)
+actualDistributionDir=""
+
+# First try the expected directory name (for regular distributions)
+if [ -d "$TMP_DOWNLOAD_DIR/$distributionUrlNameMain" ]; then
+  if [ -f "$TMP_DOWNLOAD_DIR/$distributionUrlNameMain/bin/$MVN_CMD" ]; then
+    actualDistributionDir="$distributionUrlNameMain"
+  fi
+fi
+
+# If not found, search for any directory with the Maven executable (for snapshots)
+if [ -z "$actualDistributionDir" ]; then
+  # enable globbing to iterate over items
+  set +f
+  for dir in "$TMP_DOWNLOAD_DIR"/*; do
+    if [ -d "$dir" ]; then
+      if [ -f "$dir/bin/$MVN_CMD" ]; then
+        actualDistributionDir="$(basename "$dir")"
+        break
+      fi
+    fi
+  done
+  set -f
+fi
+
+if [ -z "$actualDistributionDir" ]; then
+  verbose "Contents of $TMP_DOWNLOAD_DIR:"
+  verbose "$(ls -la "$TMP_DOWNLOAD_DIR")"
+  die "Could not find Maven distribution directory in extracted archive"
+fi
+
+verbose "Found extracted Maven distribution directory: $actualDistributionDir"
+printf %s\\n "$distributionUrl" >"$TMP_DOWNLOAD_DIR/$actualDistributionDir/mvnw.url"
+mv -- "$TMP_DOWNLOAD_DIR/$actualDistributionDir" "$MAVEN_HOME" || [ -d "$MAVEN_HOME" ] || die "fail to move MAVEN_HOME"
+
+clean || :
+exec_maven "$@"
+</file>
+
+<file path="backend/mvnw.cmd">
+<# : batch portion
+@REM ----------------------------------------------------------------------------
+@REM Licensed to the Apache Software Foundation (ASF) under one
+@REM or more contributor license agreements.  See the NOTICE file
+@REM distributed with this work for additional information
+@REM regarding copyright ownership.  The ASF licenses this file
+@REM to you under the Apache License, Version 2.0 (the
+@REM "License"); you may not use this file except in compliance
+@REM with the License.  You may obtain a copy of the License at
+@REM
+@REM    http://www.apache.org/licenses/LICENSE-2.0
+@REM
+@REM Unless required by applicable law or agreed to in writing,
+@REM software distributed under the License is distributed on an
+@REM "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+@REM KIND, either express or implied.  See the License for the
+@REM specific language governing permissions and limitations
+@REM under the License.
+@REM ----------------------------------------------------------------------------
+
+@REM ----------------------------------------------------------------------------
+@REM Apache Maven Wrapper startup batch script, version 3.3.4
+@REM
+@REM Optional ENV vars
+@REM   MVNW_REPOURL - repo url base for downloading maven distribution
+@REM   MVNW_USERNAME/MVNW_PASSWORD - user and password for downloading maven
+@REM   MVNW_VERBOSE - true: enable verbose log; others: silence the output
+@REM ----------------------------------------------------------------------------
+
+@IF "%__MVNW_ARG0_NAME__%"=="" (SET __MVNW_ARG0_NAME__=%~nx0)
+@SET __MVNW_CMD__=
+@SET __MVNW_ERROR__=
+@SET __MVNW_PSMODULEP_SAVE=%PSModulePath%
+@SET PSModulePath=
+@FOR /F "usebackq tokens=1* delims==" %%A IN (`powershell -noprofile "& {$scriptDir='%~dp0'; $script='%__MVNW_ARG0_NAME__%'; icm -ScriptBlock ([Scriptblock]::Create((Get-Content -Raw '%~f0'))) -NoNewScope}"`) DO @(
+  IF "%%A"=="MVN_CMD" (set __MVNW_CMD__=%%B) ELSE IF "%%B"=="" (echo %%A) ELSE (echo %%A=%%B)
+)
+@SET PSModulePath=%__MVNW_PSMODULEP_SAVE%
+@SET __MVNW_PSMODULEP_SAVE=
+@SET __MVNW_ARG0_NAME__=
+@SET MVNW_USERNAME=
+@SET MVNW_PASSWORD=
+@IF NOT "%__MVNW_CMD__%"=="" ("%__MVNW_CMD__%" %*)
+@echo Cannot start maven from wrapper >&2 && exit /b 1
+@GOTO :EOF
+: end batch / begin powershell #>
+
+$ErrorActionPreference = "Stop"
+if ($env:MVNW_VERBOSE -eq "true") {
+  $VerbosePreference = "Continue"
+}
+
+# calculate distributionUrl, requires .mvn/wrapper/maven-wrapper.properties
+$distributionUrl = (Get-Content -Raw "$scriptDir/.mvn/wrapper/maven-wrapper.properties" | ConvertFrom-StringData).distributionUrl
+if (!$distributionUrl) {
+  Write-Error "cannot read distributionUrl property in $scriptDir/.mvn/wrapper/maven-wrapper.properties"
+}
+
+switch -wildcard -casesensitive ( $($distributionUrl -replace '^.*/','') ) {
+  "maven-mvnd-*" {
+    $USE_MVND = $true
+    $distributionUrl = $distributionUrl -replace '-bin\.[^.]*$',"-windows-amd64.zip"
+    $MVN_CMD = "mvnd.cmd"
+    break
+  }
+  default {
+    $USE_MVND = $false
+    $MVN_CMD = $script -replace '^mvnw','mvn'
+    break
+  }
+}
+
+# apply MVNW_REPOURL and calculate MAVEN_HOME
+# maven home pattern: ~/.m2/wrapper/dists/{apache-maven-<version>,maven-mvnd-<version>-<platform>}/<hash>
+if ($env:MVNW_REPOURL) {
+  $MVNW_REPO_PATTERN = if ($USE_MVND -eq $False) { "/org/apache/maven/" } else { "/maven/mvnd/" }
+  $distributionUrl = "$env:MVNW_REPOURL$MVNW_REPO_PATTERN$($distributionUrl -replace "^.*$MVNW_REPO_PATTERN",'')"
+}
+$distributionUrlName = $distributionUrl -replace '^.*/',''
+$distributionUrlNameMain = $distributionUrlName -replace '\.[^.]*$','' -replace '-bin$',''
+
+$MAVEN_M2_PATH = "$HOME/.m2"
+if ($env:MAVEN_USER_HOME) {
+  $MAVEN_M2_PATH = "$env:MAVEN_USER_HOME"
+}
+
+if (-not (Test-Path -Path $MAVEN_M2_PATH)) {
+    New-Item -Path $MAVEN_M2_PATH -ItemType Directory | Out-Null
+}
+
+$MAVEN_WRAPPER_DISTS = $null
+if ((Get-Item $MAVEN_M2_PATH).Target[0] -eq $null) {
+  $MAVEN_WRAPPER_DISTS = "$MAVEN_M2_PATH/wrapper/dists"
+} else {
+  $MAVEN_WRAPPER_DISTS = (Get-Item $MAVEN_M2_PATH).Target[0] + "/wrapper/dists"
+}
+
+$MAVEN_HOME_PARENT = "$MAVEN_WRAPPER_DISTS/$distributionUrlNameMain"
+$MAVEN_HOME_NAME = ([System.Security.Cryptography.SHA256]::Create().ComputeHash([byte[]][char[]]$distributionUrl) | ForEach-Object {$_.ToString("x2")}) -join ''
+$MAVEN_HOME = "$MAVEN_HOME_PARENT/$MAVEN_HOME_NAME"
+
+if (Test-Path -Path "$MAVEN_HOME" -PathType Container) {
+  Write-Verbose "found existing MAVEN_HOME at $MAVEN_HOME"
+  Write-Output "MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD"
+  exit $?
+}
+
+if (! $distributionUrlNameMain -or ($distributionUrlName -eq $distributionUrlNameMain)) {
+  Write-Error "distributionUrl is not valid, must end with *-bin.zip, but found $distributionUrl"
+}
+
+# prepare tmp dir
+$TMP_DOWNLOAD_DIR_HOLDER = New-TemporaryFile
+$TMP_DOWNLOAD_DIR = New-Item -Itemtype Directory -Path "$TMP_DOWNLOAD_DIR_HOLDER.dir"
+$TMP_DOWNLOAD_DIR_HOLDER.Delete() | Out-Null
+trap {
+  if ($TMP_DOWNLOAD_DIR.Exists) {
+    try { Remove-Item $TMP_DOWNLOAD_DIR -Recurse -Force | Out-Null }
+    catch { Write-Warning "Cannot remove $TMP_DOWNLOAD_DIR" }
+  }
+}
+
+New-Item -Itemtype Directory -Path "$MAVEN_HOME_PARENT" -Force | Out-Null
+
+# Download and Install Apache Maven
+Write-Verbose "Couldn't find MAVEN_HOME, downloading and installing it ..."
+Write-Verbose "Downloading from: $distributionUrl"
+Write-Verbose "Downloading to: $TMP_DOWNLOAD_DIR/$distributionUrlName"
+
+$webclient = New-Object System.Net.WebClient
+if ($env:MVNW_USERNAME -and $env:MVNW_PASSWORD) {
+  $webclient.Credentials = New-Object System.Net.NetworkCredential($env:MVNW_USERNAME, $env:MVNW_PASSWORD)
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$webclient.DownloadFile($distributionUrl, "$TMP_DOWNLOAD_DIR/$distributionUrlName") | Out-Null
+
+# If specified, validate the SHA-256 sum of the Maven distribution zip file
+$distributionSha256Sum = (Get-Content -Raw "$scriptDir/.mvn/wrapper/maven-wrapper.properties" | ConvertFrom-StringData).distributionSha256Sum
+if ($distributionSha256Sum) {
+  if ($USE_MVND) {
+    Write-Error "Checksum validation is not supported for maven-mvnd. `nPlease disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties."
+  }
+  Import-Module $PSHOME\Modules\Microsoft.PowerShell.Utility -Function Get-FileHash
+  if ((Get-FileHash "$TMP_DOWNLOAD_DIR/$distributionUrlName" -Algorithm SHA256).Hash.ToLower() -ne $distributionSha256Sum) {
+    Write-Error "Error: Failed to validate Maven distribution SHA-256, your Maven distribution might be compromised. If you updated your Maven version, you need to update the specified distributionSha256Sum property."
+  }
+}
+
+# unzip and move
+Expand-Archive "$TMP_DOWNLOAD_DIR/$distributionUrlName" -DestinationPath "$TMP_DOWNLOAD_DIR" | Out-Null
+
+# Find the actual extracted directory name (handles snapshots where filename != directory name)
+$actualDistributionDir = ""
+
+# First try the expected directory name (for regular distributions)
+$expectedPath = Join-Path "$TMP_DOWNLOAD_DIR" "$distributionUrlNameMain"
+$expectedMvnPath = Join-Path "$expectedPath" "bin/$MVN_CMD"
+if ((Test-Path -Path $expectedPath -PathType Container) -and (Test-Path -Path $expectedMvnPath -PathType Leaf)) {
+  $actualDistributionDir = $distributionUrlNameMain
+}
+
+# If not found, search for any directory with the Maven executable (for snapshots)
+if (!$actualDistributionDir) {
+  Get-ChildItem -Path "$TMP_DOWNLOAD_DIR" -Directory | ForEach-Object {
+    $testPath = Join-Path $_.FullName "bin/$MVN_CMD"
+    if (Test-Path -Path $testPath -PathType Leaf) {
+      $actualDistributionDir = $_.Name
+    }
+  }
+}
+
+if (!$actualDistributionDir) {
+  Write-Error "Could not find Maven distribution directory in extracted archive"
+}
+
+Write-Verbose "Found extracted Maven distribution directory: $actualDistributionDir"
+Rename-Item -Path "$TMP_DOWNLOAD_DIR/$actualDistributionDir" -NewName $MAVEN_HOME_NAME | Out-Null
+try {
+  Move-Item -Path "$TMP_DOWNLOAD_DIR/$MAVEN_HOME_NAME" -Destination $MAVEN_HOME_PARENT | Out-Null
+} catch {
+  if (! (Test-Path -Path "$MAVEN_HOME" -PathType Container)) {
+    Write-Error "fail to move MAVEN_HOME"
+  }
+} finally {
+  try { Remove-Item $TMP_DOWNLOAD_DIR -Recurse -Force | Out-Null }
+  catch { Write-Warning "Cannot remove $TMP_DOWNLOAD_DIR" }
+}
+
+Write-Output "MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD"
+</file>
+
+<file path="frontend/public/favicon.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="46" fill="none" viewBox="0 0 48 46"><path fill="#863bff" d="M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z" style="fill:#863bff;fill:color(display-p3 .5252 .23 1);fill-opacity:1"/><mask id="a" width="48" height="46" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M25.842 44.938c-.664.844-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.183c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.498 0-3.579-1.842-3.579H1.133c-.92 0-1.456-1.04-.92-1.787L9.91.473c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.578 1.842 3.578h11.377c.943 0 1.473 1.088.89 1.832L25.843 44.94z" style="fill:#000;fill-opacity:1"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#ede6ff" rx="5.508" ry="14.704" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -4.47 31.516)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#ede6ff" rx="10.399" ry="29.851" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -39.328 7.883)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#7e14ff" rx="5.508" ry="30.487" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -25.913 -14.639)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -32.644 -3.334)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -34.34 30.47)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#ede6ff" rx="14.072" ry="22.078" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="rotate(93.35 24.506 48.493)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx=".387" cy="8.972" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(39.51 .387 8.972)"/></g><g filter="url(#k)"><ellipse cx="47.523" cy="-6.092" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 47.523 -6.092)"/></g><g filter="url(#l)"><ellipse cx="41.412" cy="6.333" fill="#47bfff" rx="5.971" ry="9.665" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 41.412 6.333)"/></g><g filter="url(#m)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#n)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#o)"><ellipse cx="35.651" cy="29.907" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 35.651 29.907)"/></g><g filter="url(#p)"><ellipse cx="38.418" cy="32.4" fill="#47bfff" rx="5.971" ry="15.297" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 38.418 32.4)"/></g></g><defs><filter id="b" width="60.045" height="41.654" x="-19.77" y="16.149" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-54.613" y="-7.533" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-49.64" y="2.03" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-45.045" y="20.029" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-43.513" y="21.178" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="15.756" y="-17.901" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-27.636" y="-22.853" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="20.116" y="-38.415" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="24.641" y="-11.323" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="8.244" y="-2.416" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="18.713" y="10.588" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter></defs></svg>
+</file>
+
+<file path="frontend/public/icons.svg">
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="bluesky-icon" viewBox="0 0 16 17">
+    <g clip-path="url(#bluesky-clip)"><path fill="#08060d" d="M7.75 7.735c-.693-1.348-2.58-3.86-4.334-5.097-1.68-1.187-2.32-.981-2.74-.79C.188 2.065.1 2.812.1 3.251s.241 3.602.398 4.13c.52 1.744 2.367 2.333 4.07 2.145-2.495.37-4.71 1.278-1.805 4.512 3.196 3.309 4.38-.71 4.987-2.746.608 2.036 1.307 5.91 4.93 2.746 2.72-2.746.747-4.143-1.747-4.512 1.702.189 3.55-.4 4.07-2.145.156-.528.397-3.691.397-4.13s-.088-1.186-.575-1.406c-.42-.19-1.06-.395-2.741.79-1.755 1.24-3.64 3.752-4.334 5.099"/></g>
+    <defs><clipPath id="bluesky-clip"><path fill="#fff" d="M.1.85h15.3v15.3H.1z"/></clipPath></defs>
+  </symbol>
+  <symbol id="discord-icon" viewBox="0 0 20 19">
+    <path fill="#08060d" d="M16.224 3.768a14.5 14.5 0 0 0-3.67-1.153c-.158.286-.343.67-.47.976a13.5 13.5 0 0 0-4.067 0c-.128-.306-.317-.69-.476-.976A14.4 14.4 0 0 0 3.868 3.77C1.546 7.28.916 10.703 1.231 14.077a14.7 14.7 0 0 0 4.5 2.306q.545-.748.965-1.587a9.5 9.5 0 0 1-1.518-.74q.191-.14.372-.293c2.927 1.369 6.107 1.369 8.999 0q.183.152.372.294-.723.437-1.52.74.418.838.963 1.588a14.6 14.6 0 0 0 4.504-2.308c.37-3.911-.63-7.302-2.644-10.309m-9.13 8.234c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.894 0 1.614.82 1.599 1.82.001 1-.705 1.82-1.6 1.82m5.91 0c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.893 0 1.614.82 1.599 1.82 0 1-.706 1.82-1.6 1.82"/>
+  </symbol>
+  <symbol id="documentation-icon" viewBox="0 0 21 20">
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="m15.5 13.333 1.533 1.322c.645.555.967.833.967 1.178s-.322.623-.967 1.179L15.5 18.333m-3.333-5-1.534 1.322c-.644.555-.966.833-.966 1.178s.322.623.966 1.179l1.534 1.321"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M17.167 10.836v-4.32c0-1.41 0-2.117-.224-2.68-.359-.906-1.118-1.621-2.08-1.96-.599-.21-1.349-.21-2.848-.21-2.623 0-3.935 0-4.983.369-1.684.591-3.013 1.842-3.641 3.428C3 6.449 3 7.684 3 10.154v2.122c0 2.558 0 3.838.706 4.726q.306.383.713.671c.76.536 1.79.64 3.581.66"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M3 10a2.78 2.78 0 0 1 2.778-2.778c.555 0 1.209.097 1.748-.047.48-.129.854-.503.982-.982.145-.54.048-1.194.048-1.749a2.78 2.78 0 0 1 2.777-2.777"/>
+  </symbol>
+  <symbol id="github-icon" viewBox="0 0 19 19">
+    <path fill="#08060d" fill-rule="evenodd" d="M9.356 1.85C5.05 1.85 1.57 5.356 1.57 9.694a7.84 7.84 0 0 0 5.324 7.44c.387.079.528-.168.528-.376 0-.182-.013-.805-.013-1.454-2.165.467-2.616-.935-2.616-.935-.349-.91-.864-1.143-.864-1.143-.71-.48.051-.48.051-.48.787.051 1.2.805 1.2.805.695 1.194 1.817.857 2.268.649.064-.507.27-.857.49-1.052-1.728-.182-3.545-.857-3.545-3.87 0-.857.31-1.558.8-2.104-.078-.195-.349-1 .077-2.078 0 0 .657-.208 2.14.805a7.5 7.5 0 0 1 1.946-.26c.657 0 1.328.092 1.946.26 1.483-1.013 2.14-.805 2.14-.805.426 1.078.155 1.883.078 2.078.502.546.799 1.247.799 2.104 0 3.013-1.818 3.675-3.558 3.87.284.247.528.714.528 1.454 0 1.052-.012 1.896-.012 2.156 0 .208.142.455.528.377a7.84 7.84 0 0 0 5.324-7.441c.013-4.338-3.48-7.844-7.773-7.844" clip-rule="evenodd"/>
+  </symbol>
+  <symbol id="social-icon" viewBox="0 0 20 20">
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M12.5 6.667a4.167 4.167 0 1 0-8.334 0 4.167 4.167 0 0 0 8.334 0"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M2.5 16.667a5.833 5.833 0 0 1 8.75-5.053m3.837.474.513 1.035c.07.144.257.282.414.309l.93.155c.596.1.736.536.307.965l-.723.73a.64.64 0 0 0-.152.531l.207.903c.164.715-.213.991-.84.618l-.872-.52a.63.63 0 0 0-.577 0l-.872.52c-.624.373-1.003.094-.84-.618l.207-.903a.64.64 0 0 0-.152-.532l-.723-.729c-.426-.43-.289-.864.306-.964l.93-.156a.64.64 0 0 0 .412-.31l.513-1.034c.28-.562.735-.562 1.012 0"/>
+  </symbol>
+  <symbol id="x-icon" viewBox="0 0 19 19">
+    <path fill="#08060d" fill-rule="evenodd" d="M1.893 1.98c.052.072 1.245 1.769 2.653 3.77l2.892 4.114c.183.261.333.48.333.486s-.068.089-.152.183l-.522.593-.765.867-3.597 4.087c-.375.426-.734.834-.798.905a1 1 0 0 0-.118.148c0 .01.236.017.664.017h.663l.729-.83c.4-.457.796-.906.879-.999a692 692 0 0 0 1.794-2.038c.034-.037.301-.34.594-.675l.551-.624.345-.392a7 7 0 0 1 .34-.374c.006 0 .93 1.306 2.052 2.903l2.084 2.965.045.063h2.275c1.87 0 2.273-.003 2.266-.021-.008-.02-1.098-1.572-3.894-5.547-2.013-2.862-2.28-3.246-2.273-3.266.008-.019.282-.332 2.085-2.38l2-2.274 1.567-1.782c.022-.028-.016-.03-.65-.03h-.674l-.3.342a871 871 0 0 1-1.782 2.025c-.067.075-.405.458-.75.852a100 100 0 0 1-.803.91c-.148.172-.299.344-.99 1.127-.304.343-.32.358-.345.327-.015-.019-.904-1.282-1.976-2.808L6.365 1.85H1.8zm1.782.91 8.078 11.294c.772 1.08 1.413 1.973 1.425 1.984.016.017.241.02 1.05.017l1.03-.004-2.694-3.766L7.796 5.75 5.722 2.852l-1.039-.004-1.039-.004z" clip-rule="evenodd"/>
+  </symbol>
+</svg>
+</file>
+
+<file path="frontend/src/assets/react.svg">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="35.93" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 228"><path fill="#00D8FF" d="M210.483 73.824a171.49 171.49 0 0 0-8.24-2.597c.465-1.9.893-3.777 1.273-5.621c6.238-30.281 2.16-54.676-11.769-62.708c-13.355-7.7-35.196.329-57.254 19.526a171.23 171.23 0 0 0-6.375 5.848a155.866 155.866 0 0 0-4.241-3.917C100.759 3.829 77.587-4.822 63.673 3.233C50.33 10.957 46.379 33.89 51.995 62.588a170.974 170.974 0 0 0 1.892 8.48c-3.28.932-6.445 1.924-9.474 2.98C17.309 83.498 0 98.307 0 113.668c0 15.865 18.582 31.778 46.812 41.427a145.52 145.52 0 0 0 6.921 2.165a167.467 167.467 0 0 0-2.01 9.138c-5.354 28.2-1.173 50.591 12.134 58.266c13.744 7.926 36.812-.22 59.273-19.855a145.567 145.567 0 0 0 5.342-4.923a168.064 168.064 0 0 0 6.92 6.314c21.758 18.722 43.246 26.282 56.54 18.586c13.731-7.949 18.194-32.003 12.4-61.268a145.016 145.016 0 0 0-1.535-6.842c1.62-.48 3.21-.974 4.76-1.488c29.348-9.723 48.443-25.443 48.443-41.52c0-15.417-17.868-30.326-45.517-39.844Zm-6.365 70.984c-1.4.463-2.836.91-4.3 1.345c-3.24-10.257-7.612-21.163-12.963-32.432c5.106-11 9.31-21.767 12.459-31.957c2.619.758 5.16 1.557 7.61 2.4c23.69 8.156 38.14 20.213 38.14 29.504c0 9.896-15.606 22.743-40.946 31.14Zm-10.514 20.834c2.562 12.94 2.927 24.64 1.23 33.787c-1.524 8.219-4.59 13.698-8.382 15.893c-8.067 4.67-25.32-1.4-43.927-17.412a156.726 156.726 0 0 1-6.437-5.87c7.214-7.889 14.423-17.06 21.459-27.246c12.376-1.098 24.068-2.894 34.671-5.345a134.17 134.17 0 0 1 1.386 6.193ZM87.276 214.515c-7.882 2.783-14.16 2.863-17.955.675c-8.075-4.657-11.432-22.636-6.853-46.752a156.923 156.923 0 0 1 1.869-8.499c10.486 2.32 22.093 3.988 34.498 4.994c7.084 9.967 14.501 19.128 21.976 27.15a134.668 134.668 0 0 1-4.877 4.492c-9.933 8.682-19.886 14.842-28.658 17.94ZM50.35 144.747c-12.483-4.267-22.792-9.812-29.858-15.863c-6.35-5.437-9.555-10.836-9.555-15.216c0-9.322 13.897-21.212 37.076-29.293c2.813-.98 5.757-1.905 8.812-2.773c3.204 10.42 7.406 21.315 12.477 32.332c-5.137 11.18-9.399 22.249-12.634 32.792a134.718 134.718 0 0 1-6.318-1.979Zm12.378-84.26c-4.811-24.587-1.616-43.134 6.425-47.789c8.564-4.958 27.502 2.111 47.463 19.835a144.318 144.318 0 0 1 3.841 3.545c-7.438 7.987-14.787 17.08-21.808 26.988c-12.04 1.116-23.565 2.908-34.161 5.309a160.342 160.342 0 0 1-1.76-7.887Zm110.427 27.268a347.8 347.8 0 0 0-7.785-12.803c8.168 1.033 15.994 2.404 23.343 4.08c-2.206 7.072-4.956 14.465-8.193 22.045a381.151 381.151 0 0 0-7.365-13.322Zm-45.032-43.861c5.044 5.465 10.096 11.566 15.065 18.186a322.04 322.04 0 0 0-30.257-.006c4.974-6.559 10.069-12.652 15.192-18.18ZM82.802 87.83a323.167 323.167 0 0 0-7.227 13.238c-3.184-7.553-5.909-14.98-8.134-22.152c7.304-1.634 15.093-2.97 23.209-3.984a321.524 321.524 0 0 0-7.848 12.897Zm8.081 65.352c-8.385-.936-16.291-2.203-23.593-3.793c2.26-7.3 5.045-14.885 8.298-22.6a321.187 321.187 0 0 0 7.257 13.246c2.594 4.48 5.28 8.868 8.038 13.147Zm37.542 31.03c-5.184-5.592-10.354-11.779-15.403-18.433c4.902.192 9.899.29 14.978.29c5.218 0 10.376-.117 15.453-.343c-4.985 6.774-10.018 12.97-15.028 18.486Zm52.198-57.817c3.422 7.8 6.306 15.345 8.596 22.52c-7.422 1.694-15.436 3.058-23.88 4.071a382.417 382.417 0 0 0 7.859-13.026a347.403 347.403 0 0 0 7.425-13.565Zm-16.898 8.101a358.557 358.557 0 0 1-12.281 19.815a329.4 329.4 0 0 1-23.444.823c-7.967 0-15.716-.248-23.178-.732a310.202 310.202 0 0 1-12.513-19.846h.001a307.41 307.41 0 0 1-10.923-20.627a310.278 310.278 0 0 1 10.89-20.637l-.001.001a307.318 307.318 0 0 1 12.413-19.761c7.613-.576 15.42-.876 23.31-.876H128c7.926 0 15.743.303 23.354.883a329.357 329.357 0 0 1 12.335 19.695a358.489 358.489 0 0 1 11.036 20.54a329.472 329.472 0 0 1-11 20.722Zm22.56-122.124c8.572 4.944 11.906 24.881 6.52 51.026c-.344 1.668-.73 3.367-1.15 5.09c-10.622-2.452-22.155-4.275-34.23-5.408c-7.034-10.017-14.323-19.124-21.64-27.008a160.789 160.789 0 0 1 5.888-5.4c18.9-16.447 36.564-22.941 44.612-18.3ZM128 90.808c12.625 0 22.86 10.235 22.86 22.86s-10.235 22.86-22.86 22.86s-22.86-10.235-22.86-22.86s10.235-22.86 22.86-22.86Z"></path></svg>
+</file>
+
+<file path="frontend/src/assets/vite.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="77" height="47" fill="none" aria-labelledby="vite-logo-title" viewBox="0 0 77 47"><title id="vite-logo-title">Vite</title><style>.parenthesis{fill:#000}@media (prefers-color-scheme:dark){.parenthesis{fill:#fff}}</style><path fill="#9135ff" d="M40.151 45.71c-.663.844-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.493c-.92 0-1.457-1.04-.92-1.788l7.479-10.471c1.07-1.498 0-3.578-1.842-3.578H15.443c-.92 0-1.456-1.04-.92-1.788l9.696-13.576c.213-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.472c-1.07 1.497 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.087.89 1.83L40.153 45.712z"/><mask id="a" width="48" height="47" x="14" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M40.047 45.71c-.663.843-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.389c-.92 0-1.457-1.04-.92-1.788l7.479-10.472c1.07-1.497 0-3.578-1.842-3.578H15.34c-.92 0-1.456-1.04-.92-1.788l9.696-13.575c.213-.297.556-.474.92-.474H53.93c.92 0 1.456 1.04.92 1.788L47.37 13.03c-1.07 1.498 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.088.89 1.831L40.049 45.712z"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#eee6ff" rx="5.508" ry="14.704" transform="rotate(269.814 20.96 11.29)scale(-1 1)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#eee6ff" rx="10.399" ry="29.851" transform="rotate(89.814 -16.902 -8.275)scale(1 -1)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#8900ff" rx="5.508" ry="30.487" transform="rotate(89.814 -19.197 -7.127)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#8900ff" rx="5.508" ry="30.599" transform="rotate(89.814 -25.928 4.177)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#8900ff" rx="5.508" ry="30.599" transform="rotate(89.814 -25.738 5.52)scale(1 -1)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#eee6ff" rx="14.072" ry="22.078" transform="rotate(93.35 31.245 55.578)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#8900ff" rx="3.47" ry="21.501" transform="rotate(89.009 35.419 55.202)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#8900ff" rx="3.47" ry="21.501" transform="rotate(89.009 35.419 55.202)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx="14.592" cy="9.743" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(39.51 14.592 9.743)"/></g><g filter="url(#k)"><ellipse cx="61.728" cy="-5.321" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 61.728 -5.32)"/></g><g filter="url(#l)"><ellipse cx="55.618" cy="7.104" fill="#00c2ff" rx="5.971" ry="9.665" transform="rotate(37.892 55.618 7.104)"/></g><g filter="url(#m)"><ellipse cx="12.326" cy="39.103" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 12.326 39.103)"/></g><g filter="url(#n)"><ellipse cx="12.326" cy="39.103" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 12.326 39.103)"/></g><g filter="url(#o)"><ellipse cx="49.857" cy="30.678" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 49.857 30.678)"/></g><g filter="url(#p)"><ellipse cx="52.623" cy="33.171" fill="#00c2ff" rx="5.971" ry="15.297" transform="rotate(37.892 52.623 33.17)"/></g></g><path d="M6.919 0c-9.198 13.166-9.252 33.575 0 46.789h6.215c-9.25-13.214-9.196-33.623 0-46.789zm62.424 0h-6.215c9.198 13.166 9.252 33.575 0 46.789h6.215c9.25-13.214 9.196-33.623 0-46.789" class="parenthesis"/><defs><filter id="b" width="60.045" height="41.654" x="-5.564" y="16.92" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-40.407" y="-6.762" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-35.435" y="2.801" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-30.84" y="20.8" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-29.307" y="21.949" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="29.961" y="-17.13" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="37.754" y="3.055" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="37.754" y="3.055" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-13.43" y="-22.082" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="34.321" y="-37.644" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="38.847" y="-10.552" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-15.081" y="6.78" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-15.081" y="6.78" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="22.45" y="-1.645" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="32.919" y="11.36" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter></defs></svg>
+</file>
+
+<file path="frontend/src/App.css">
+.counter {
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+  margin-bottom: 24px;
+
+  &:hover {
+    border-color: var(--accent-border);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.hero {
+  position: relative;
+
+  .base,
+  .framework,
+  .vite {
+    inset-inline: 0;
+    margin: 0 auto;
+  }
+
+  .base {
+    width: 170px;
+    position: relative;
+    z-index: 0;
+  }
+
+  .framework,
+  .vite {
+    position: absolute;
+  }
+
+  .framework {
+    z-index: 1;
+    top: 34px;
+    height: 28px;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
+      scale(1.4);
+  }
+
+  .vite {
+    z-index: 0;
+    top: 107px;
+    height: 26px;
+    width: auto;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
+      scale(0.8);
+  }
+}
+
+#center {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  place-content: center;
+  place-items: center;
+  flex-grow: 1;
+
+  @media (max-width: 1024px) {
+    padding: 32px 20px 24px;
+    gap: 18px;
+  }
+}
+
+#next-steps {
+  display: flex;
+  border-top: 1px solid var(--border);
+  text-align: left;
+
+  & > div {
+    flex: 1 1 0;
+    padding: 32px;
+    @media (max-width: 1024px) {
+      padding: 24px 20px;
+    }
+  }
+
+  .icon {
+    margin-bottom: 16px;
+    width: 22px;
+    height: 22px;
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+#docs {
+  border-right: 1px solid var(--border);
+
+  @media (max-width: 1024px) {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+#next-steps ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  margin: 32px 0 0;
+
+  .logo {
+    height: 18px;
+  }
+
+  a {
+    color: var(--text-h);
+    font-size: 16px;
+    border-radius: 6px;
+    background: var(--social-bg);
+    display: flex;
+    padding: 6px 12px;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: box-shadow 0.3s;
+
+    &:hover {
+      box-shadow: var(--shadow);
+    }
+    .button-icon {
+      height: 18px;
+      width: 18px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    li {
+      flex: 1 1 calc(50% - 8px);
+    }
+
+    a {
+      width: 100%;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+  }
+}
+
+#spacer {
+  height: 88px;
+  border-top: 1px solid var(--border);
+  @media (max-width: 1024px) {
+    height: 48px;
+  }
+}
+
+.ticks {
+  position: relative;
+  width: 100%;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: -4.5px;
+    border: 5px solid transparent;
+  }
+
+  &::before {
+    left: 0;
+    border-left-color: var(--border);
+  }
+  &::after {
+    right: 0;
+    border-right-color: var(--border);
+  }
+}
+</file>
+
+<file path="frontend/src/index.css">
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+</file>
+
+<file path="frontend/src/main.jsx">
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+</file>
+
+<file path="frontend/.gitignore">
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+</file>
+
+<file path="frontend/Dockerfile">
+# Etapa 1: Construcción (Node 22)
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Etapa 2: Servidor Web (Nginx)
+FROM nginx:alpine
+# Copiamos los estáticos generados al Nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+</file>
+
+<file path="frontend/eslint.config.js">
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{js,jsx}'],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+  },
+])
+</file>
+
+<file path="frontend/index.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>frontend</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="frontend/package.json">
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "vite": "^8.2.0"
+  }
+}
+</file>
+
+<file path="frontend/README.md">
+# React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+</file>
+
+<file path="frontend/vite.config.js">
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+})
+</file>
+
+<file path=".gitignore">
+# =========================
+# Entorno y Secretos
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Base de Datos
+# =========================
+db/backups/*
+!db/backups/.gitkeep
+
+# =========================
+# Backend (Spring Boot / Maven)
+# =========================
+backend/target/
+backend/!.mvn/wrapper/maven-wrapper.jar
+backend/log/
+backend/*.log
+
+# =========================
+# Frontend (React / Vite)
+# =========================
+front/node_modules/
+front/dist/
+front/dist-ssr/
+front/*.local
+
+# =========================
+# IDEs y SO (Windows/Mac/Linux)
+# =========================
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/controllers/AuthController.java">
+package com.ferreteria.ferreteria_backend.controllers;
+
+import com.ferreteria.ferreteria_backend.dto.AuthDTO;
+import com.ferreteria.ferreteria_backend.repositories.UsuarioRepository;
+import com.ferreteria.ferreteria_backend.security.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
+public class AuthController {
+
+    @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired private JwtUtil jwtUtil;
+    @Autowired private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody AuthDTO dto) {
+        return usuarioRepository.findByNombreUsuario(dto.nombreUsuario())
+            // Compara la contraseña en texto plano del DTO contra el Hash de la BD
+            .filter(u -> passwordEncoder.matches(dto.contrasena(), u.getContrasena()))
+            .map(u -> ResponseEntity.ok(jwtUtil.generarToken(u.getNombreUsuario())))
+            .orElseGet(() -> ResponseEntity.status(401).body("Credenciales incorrectas"));
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/controllers/CategoriaController.java">
+package com.ferreteria.ferreteria_backend.controllers;
+
+import com.ferreteria.ferreteria_backend.entities.Categoria;
+import com.ferreteria.ferreteria_backend.repositories.CategoriaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/categorias")
+@CrossOrigin(origins = "*")
+public class CategoriaController {
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    @GetMapping
+    public List<Categoria> obtenerTodas() {
+        return categoriaRepository.findAll();
+    }
+
+    @PostMapping
+    public Categoria crearCategoria(@RequestBody Categoria nuevaCategoria) {
+        return categoriaRepository.save(nuevaCategoria);
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/controllers/HistorialVentaController.java">
+package com.ferreteria.ferreteria_backend.controllers;
+
+import com.ferreteria.ferreteria_backend.dto.HistorialVentaDTO;
+import com.ferreteria.ferreteria_backend.entities.HistorialVenta;
+import com.ferreteria.ferreteria_backend.entities.Usuario;
+import com.ferreteria.ferreteria_backend.repositories.HistorialVentaRepository;
+import com.ferreteria.ferreteria_backend.repositories.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/ventas")
+@CrossOrigin(origins = "*")
+public class HistorialVentaController {
+    @Autowired private HistorialVentaRepository ventaRepository;
+    @Autowired private UsuarioRepository usuarioRepository;
+
+    @GetMapping public List<HistorialVenta> obtenerTodos() { return ventaRepository.findAll(); }
+
+    @PostMapping
+    public ResponseEntity<HistorialVenta> crearVenta(@RequestBody HistorialVentaDTO dto) {
+        Usuario cajero = usuarioRepository.findById(dto.idUsuario()).orElseThrow();
+        
+        HistorialVenta venta = new HistorialVenta();
+        venta.setUsuario(cajero);
+        venta.setTotalVenta(dto.totalVenta());
+        
+        return ResponseEntity.ok(ventaRepository.save(venta));
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/dto/ProductoDTO.java">
+package com.ferreteria.ferreteria_backend.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import java.math.BigDecimal;
+
+public record ProductoDTO(
+    @NotNull(message = "El ID de la categoría es obligatorio") 
+    Integer idCategoria,
+    
+    @NotBlank(message = "El nombre del producto no puede estar vacío") 
+    String nombre,
+    
+    String descripcion,
+    
+    @NotNull(message = "El precio es obligatorio") 
+    @Positive(message = "El precio debe ser mayor a 0") 
+    BigDecimal precioVentaAct,
+    
+    @NotNull(message = "El stock es obligatorio") 
+    @PositiveOrZero(message = "El stock no puede ser negativo") 
+    BigDecimal stockTotal
+) {}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/repositories/UsuarioRepository.java">
+package com.ferreteria.ferreteria_backend.repositories;
+import com.ferreteria.ferreteria_backend.entities.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.Optional;
+
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+    // Spring Boot hace la consulta SQL, solo con leer el nombre del método
+    Optional<Usuario> findByNombreUsuario(String nombreUsuario); 
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/security/SecurityConfig.java">
+package com.ferreteria.ferreteria_backend.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpMethod;
+
+@Configuration
+public class SecurityConfig {
+
+    @Autowired private JwtFilter jwtFilter;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configure(http))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll() // Puerta abierta para loguearse
+                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                .anyRequest().authenticated() // TODO lo demás, exige token
+            )
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // Metemos al cadenero antes de procesar cualquier cosa
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}
+</file>
+
+<file path="backend/src/main/resources/application.properties">
+# ==============================================================
+# Valores por defecto para desarrollo local (Terminal / VS Code)
+# Nota: Al correr en Docker, el docker-compose sobreescribirá 
+# esto inyectando las variables del archivo .env automáticamente.
+# ==============================================================
+spring.datasource.url=jdbc:postgresql://localhost:5432/ferreteria_db
+spring.datasource.username=postgres
+spring.datasource.password=rootpassword
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Configuración de Hibernate (JPA)
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+spring.application.name=ferreteria-backend
+</file>
+
+<file path="backend/Dockerfile">
+# Etapa 1: Construcción (Usamos Maven con Java 21)
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
+WORKDIR /app
+# Copiamos el pom y el código fuente
+COPY pom.xml .
+COPY src ./src
+# Compilamos y empaquetamos el .jar (saltando los tests para que sea rápido)
+RUN mvn clean package -DskipTests
+
+# Etapa 2: Ejecución (Solo el JRE limpio de Java 21)
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+# Jalamos el .jar ya compilado de la etapa anterior
+COPY --from=builder /app/target/*.jar app.jar
+EXPOSE 8080
+# Arrancamos Spring Boot
+ENTRYPOINT ["java", "-jar", "app.jar"]
+</file>
+
+<file path="db/script_inicial.sql">
+-- 1. Catálogos Base
+CREATE TABLE Roles (
+    id_rol SERIAL PRIMARY KEY,
+    tipo_rol VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(150)
+);
+
+CREATE TABLE Categorias (
+    id_categoria SERIAL PRIMARY KEY,
+    nombre VARCHAR(70) NOT NULL,
+    descripcion VARCHAR(150) NOT NULL
+);
+
+CREATE TABLE Proveedores (
+    id_proveedor SERIAL PRIMARY KEY,
+    nombre VARCHAR(70) NOT NULL,
+    numero VARCHAR(20) NOT NULL,
+    correo VARCHAR(100),
+    direccion TEXT
+);
+
+-- 2. Usuarios
+CREATE TABLE Usuarios (
+    id_usuario SERIAL PRIMARY KEY,
+    id_rol INT NOT NULL,
+    nombre_completo VARCHAR(70) NOT NULL,
+    nombre_usuario VARCHAR(70) UNIQUE NOT NULL,
+    contrasena VARCHAR(255) NOT NULL, -- Aquí va a caer el hash de BCrypt
+    CONSTRAINT fk_rol FOREIGN KEY (id_rol) REFERENCES Roles(id_rol)
+);
+
+-- 3. Productos (Catálogo Central)
+CREATE TABLE Productos (
+    id_producto SERIAL PRIMARY KEY,
+    id_categoria INT NOT NULL,
+    nombre VARCHAR(70) NOT NULL,
+    descripcion TEXT,
+    precio_venta_act NUMERIC(10,2) NOT NULL,
+    stock_total NUMERIC(10,3) NOT NULL DEFAULT 0,
+    CONSTRAINT fk_categoria FOREIGN KEY (id_categoria) REFERENCES Categorias(id_categoria)
+);
+
+-- 4. El Kardex / Lotes (El control de costos e inventario)
+CREATE TABLE Lotes_Almacen (
+    id_lote SERIAL PRIMARY KEY,
+    id_producto INT NOT NULL,
+    id_proveedor INT NOT NULL,
+    cantidad_inicial NUMERIC(10,3) NOT NULL,
+    cantidad_disponible NUMERIC(10,3) NOT NULL,
+    precio_compra NUMERIC(10,2) NOT NULL,
+    fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_producto_lote FOREIGN KEY (id_producto) REFERENCES Productos(id_producto),
+    CONSTRAINT fk_proveedor_lote FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor)
+);
+
+-- 5. Ventas (Cabecera)
+CREATE TABLE Historial_Ventas (
+    id_venta SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    fecha_venta TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    total_venta NUMERIC(10,2) NOT NULL,
+    CONSTRAINT fk_usuario_venta FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+);
+
+-- 6. Detalle de Ventas (El motor de la analítica)
+CREATE TABLE Detalle_Venta (
+    id_detalle SERIAL PRIMARY KEY,
+    id_venta INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad NUMERIC(10,3) NOT NULL,
+    precio_unitario NUMERIC(10,2) NOT NULL,
+    precio_compra_historico NUMERIC(10,2) NOT NULL,
+    subtotal NUMERIC(10,2) NOT NULL,
+    CONSTRAINT fk_venta_detalle FOREIGN KEY (id_venta) REFERENCES Historial_Ventas(id_venta) ON DELETE CASCADE,
+    CONSTRAINT fk_producto_detalle FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
+);
+
+-- ==========================================
+-- INYECCIÓN DE DATOS DE PRUEBA (CATÁLOGOS)
+-- ==========================================
+
+-- Datos para Categorias
+INSERT INTO Categorias (nombre, descripcion) VALUES 
+('Herramienta Manual', 'Martillos, desarmadores, pinzas y llaves'),
+('Herramienta Eléctrica', 'Taladros, esmeriladoras, sierras y pulidoras'),
+('Pinturas y Solventes', 'Pinturas acrílicas, esmaltes, brochas y thinner'),
+('Plomería', 'Tubos, conexiones, válvulas y grifería'),
+('Material Eléctrico', 'Cables, focos, contactos y pastillas termomagnéticas');
+
+-- Datos para Roles
+INSERT INTO Roles (tipo_rol, descripcion) VALUES 
+('ADMIN', 'Administrador total del sistema, acceso a Kárdex y reportes'),
+('CAJERO', 'Encargado de punto de venta y atención a cliente'),
+('ALMACENISTA', 'Encargado de recepción de lotes y control de stock');
+
+-- Datos para Proveedores
+INSERT INTO Proveedores (nombre, numero, correo, direccion) VALUES 
+('Truper S.A. de C.V.', '555-123-4567', 'ventas@truper.com', 'Parque Industrial, CDMX'),
+('Cemex', '555-987-6543', 'contacto@cemex.com', 'Av. Concreto 100, Monterrey'),
+('Comex', '555-456-7890', 'distribucion@comex.com.mx', 'Plaza Colores, Guadalajara');
+
+-- ==========================================
+-- INYECCIÓN DE DATOS DE PRUEBA (TRANSACCIONAL)
+-- ==========================================
+
+-- Datos para Usuarios (Asignando el Rol 1: ADMIN)
+-- Nota: La contraseña está en texto plano solo para pruebas locales, en prod iría el hash de BCrypt
+INSERT INTO Usuarios (id_rol, nombre_completo, nombre_usuario, contrasena) VALUES 
+(1, 'Administrador Principal', 'admin_master', 'admin123'),
+(2, 'Juan Perez', 'cajero_juan', 'cajero123');
+
+-- Datos para Productos (Asignando Categorías que ya existen)
+INSERT INTO Productos (id_categoria, nombre, descripcion, precio_venta_act, stock_total) VALUES 
+(1, 'Martillo de Uña Curva 16 oz', 'Martillo truper mango de fibra de vidrio', 185.50, 50.000),
+(2, 'Taladro Percutor 1/2', 'Taladro profesional 600W', 850.00, 15.000),
+(3, 'Pintura Blanca Vinílica 19L', 'Cubeta de pintura blanca para interiores', 1200.00, 10.000);
+
+-- Datos para Lotes de Almacén (Simulando la entrada de mercancía de los proveedores)
+INSERT INTO Lotes_Almacen (id_producto, id_proveedor, cantidad_inicial, cantidad_disponible, precio_compra) VALUES 
+(1, 1, 50.000, 50.000, 120.00), -- Martillos surtidos por Truper
+(3, 3, 10.000, 10.000, 800.00); -- Pinturas surtidas por Comex
+
+-- Datos para Historial_Ventas (Un ticket de venta del cajero 2)
+INSERT INTO Historial_Ventas (id_usuario, total_venta) VALUES 
+(2, 1035.50);
+
+-- Datos para Detalle_Venta (Lo que trae adentro el ticket anterior)
+INSERT INTO Detalle_Venta (id_venta, id_producto, cantidad, precio_unitario, precio_compra_historico, subtotal) VALUES 
+(1, 1, 1.000, 185.50, 120.00, 185.50), -- 1 Martillo
+(1, 2, 1.000, 850.00, 600.00, 850.00); -- 1 Taladro
+</file>
+
+<file path="frontend/src/App.jsx">
+import { useState, useEffect } from 'react';
+
+function App() {
+  // Aquí guardamos los datos que lleguen del backend
+  const [categorias, setCategorias] = useState([]);
+
+  useEffect(() => {
+    // Le pegamos a la ruta que acabas de probar con el curl
+    fetch('http://localhost:8080/api/categorias')
+      .then(response => response.json())
+      .then(data => {
+        console.log("¡Datos recibidos del back!", data);
+        setCategorias(data);
+      })
+      .catch(error => console.error('Pum, error en la matrix:', error));
+  }, []); // Los corchetes vacíos hacen que esto corra solo una vez al cargar
+
+  return (
+    <div style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif', color: 'white' }}>
+      <h1>🔧 Catálogo de Categorías (Pro-Ferretería)</h1>
+      
+      {categorias.length === 0 ? (
+        <p>Cargando datos desde Spring Boot...</p>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+          {categorias.map((cat) => (
+            <div 
+              key={cat.idCategoria} 
+              style={{ padding: '1rem', border: '1px solid #444', borderRadius: '8px', backgroundColor: '#222' }}
+            >
+              <h3 style={{ margin: '0 0 0.5rem 0', color: '#646cff' }}>{cat.nombre}</h3>
+              <p style={{ margin: 0 }}>{cat.descripcion}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
+</file>
+
+<file path="docker-compose.yml">
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: ferreteria-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/script_inicial.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend
+    container_name: ferreteria-backend
+    restart: always
+    ports:
+      - "${SPRING_PORT}:8080"
+    environment:
+      # Ahora Spring toma la ruta exacta según lo que haya en el .env (Local o Supabase)
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+    # depends_on: db <- (Opcional: puedes quitar esto si vas a usar Supabase 100% del tiempo, pero déjalo si usan el local)
+
+  frontend:
+    build: ./frontend
+    container_name: ferreteria-frontend
+    restart: always
+    ports:
+      - "${FRONT_PORT}:80"
+    depends_on:
+      - backend
+
+  backup-worker:
+    image: postgres:15-alpine
+    container_name: ferreteria-backup
+    restart: always
+    environment:
+      PGPASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./db/backups:/backups
+    command: /bin/sh -c "while true; do sleep 43200; pg_dump -h db -U ${DB_USER} ${DB_NAME} > /backups/respaldo_$$(date +%Y%m%d_%H%M%S).sql; echo 'Respaldo exitoso'; done"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+</file>
+
+<file path="readme.md">
+# 🛠️ Ferretería Cochi - POS & Inventory System
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java" />
+  <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=3ECF8E" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+</div>
+
+Sistema de Punto de Venta (POS) y Gestión de Almacén diseñado específicamente para optimizar el control de inventarios, flujo de caja y análisis de inteligencia de negocios (BI) de una ferretería.
+
+Este sistema implementa un modelo de datos robusto con control de lotes y un algoritmo de costeo **PEPS (Primeras Entradas, Primeras Salidas)** para garantizar que los márgenes de utilidad calculados en los reportes de BI sean 100% exactos frente a la fluctuación de precios de los proveedores.
+
+---
+
+## 💻 Stack Tecnológico
+
+**Arquitectura General:** Patrón MVC (Modelo-Vista-Controlador) Desacoplado.
+
+*   **Backend:** Java / Spring Boot 
+    *   *Seguridad:* Spring Security con JWT y encriptación BCrypt para contraseñas.
+    *   *Persistencia:* Spring Data JPA / Hibernate.
+*   **Frontend:** React (SPA)
+    *   *Gestión de estado:* (Redux o Context API para el carrito de compras temporal).
+*   **Base de Datos:** PostgreSQL (Hosteado vía Supabase)
+*   **Control de Versiones y Despliegue:** Git, GitHub, Docker (para contenerización local/producción).
+
+---
+
+## 🏗️ Estructura del Proyecto
+
+El proyecto está dividido en dos grandes ecosistemas para mantener la escalabilidad y facilitar el trabajo concurrente.
+
+### 1. Sistema Backend (`/backend-spring`)
+```text
+src/main/java/com/ferreteria/cochi/
+├── config/         # Configuraciones de CORS, JWT y Spring Security
+├── controllers/    # Endpoints REST (Auth, Ventas, Productos, Almacen)
+├── dtos/           # Objetos de transferencia de datos (Ej. Carrito de Ventas)
+├── entities/       # Modelos JPA mapeados a la BD (Usuarios, Productos, Lotes)
+├── repositories/   # Interfaces de acceso a datos (Spring Data)
+├── services/       # Lógica de negocio (Algoritmo PEPS, transaccionalidad)
+└── utils/          # Helpers, generadores de reportes, etc.
+```
+
+### 2. Sistema Frontend (/frontend-react)
+```text
+src/
+├── assets/         # Imágenes, iconos y estilos globales
+├── components/     # Componentes reutilizables (Botones, Tablas, Modales)
+├── context/        # Manejo de sesión global y estado del carrito
+├── hooks/          # Custom hooks para llamadas a la API
+├── pages/          # Vistas principales (Dashboard, PuntoDeVenta, Inventario)
+└── services/       # Configuraciones de Axios/Fetch apuntando al Backend
+```
+
+## 📦 Módulos Principales
+1. Módulo de Seguridad y Accesos:
+* Autenticación de Usuarios (Administrador vs. Vendedor).
+
+2. Módulo de Catálogos:
+* Gestión (CRUD) de Productos, Categorías y Proveedores.
+
+3. Módulo de Almacén (Kardex):
+* Registro de entradas por Lote para rastrear el costo unitario de compra y la fecha exacta de ingreso.
+
+4. Módulo de Ventas (POS):
+* Carrito de compras en memoria.
+* Checkout transaccional con descuento automático de stock aplicando lógica PEPS.
+
+5. Módulo de Business Intelligence (BI):
+* Historial de ventas.
+* Cálculo de márgenes de utilidad reales cruzando el precio de venta vs. el costo histórico del lote despachado.
+
+## 🚀 Instalación y Entorno Local
+1. Clonar el repositorio:
+```Bash
+git clone [https://github.com/tu-usuario/ferreteria-cochi.git](https://github.com/tu-usuario/ferreteria-cochi.git)
+```
+
+2. Configurar la Base de Datos:
+* Correr el script inicial database_schema.sql en tu instancia de PostgreSQL o Supabase.
+
+3. Levantar el Backend:
+* Navegar a la carpeta del backend.
+* Configurar las variables de entorno en application.properties (URI de la BD, JWT Secret).
+* Ejecutar mediante Maven/Gradle.
+
+4. Levantar el Frontend:
+* Navegar a la carpeta del frontend.
+* Ejecutar npm install y posteriormente npm run dev.
+
+## 👥 Equipo de Desarrollo:
+* Aldo Alvarez
+* Ignacio Herrera
+
+Hecho con ☕, código y algo de indie rock punk alternativo en la CDMX.
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/controllers/DetalleVentaController.java">
+package com.ferreteria.ferreteria_backend.controllers;
+
+import com.ferreteria.ferreteria_backend.dto.DetalleVentaDTO;
+import com.ferreteria.ferreteria_backend.entities.DetalleVenta;
+import com.ferreteria.ferreteria_backend.entities.HistorialVenta;
+import com.ferreteria.ferreteria_backend.entities.Producto;
+import com.ferreteria.ferreteria_backend.repositories.DetalleVentaRepository;
+import com.ferreteria.ferreteria_backend.repositories.HistorialVentaRepository;
+import com.ferreteria.ferreteria_backend.repositories.ProductoRepository;
+import com.ferreteria.ferreteria_backend.services.InventarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/ventas/detalles")
+@CrossOrigin(origins = "*")
+public class DetalleVentaController {
+    
+    @Autowired private DetalleVentaRepository detalleRepository;
+    @Autowired private HistorialVentaRepository ventaRepository;
+    @Autowired private ProductoRepository productoRepository;
+    @Autowired private InventarioService inventarioService;
+
+    @GetMapping 
+    public List<DetalleVenta> obtenerTodos() { 
+        return detalleRepository.findAll(); 
+    }
+
+    @PostMapping
+    public ResponseEntity<DetalleVenta> crearDetalle(@RequestBody DetalleVentaDTO dto) {
+        HistorialVenta venta = ventaRepository.findById(dto.idVenta()).orElseThrow();
+        Producto producto = productoRepository.findById(dto.idProducto()).orElseThrow();
+        
+        // 1. Descontamos stock
+        inventarioService.descontarStock(dto.idProducto(), dto.cantidad());
+
+        // 2. Guardamos el detalle
+        DetalleVenta detalle = new DetalleVenta();
+        detalle.setVenta(venta);
+        detalle.setProducto(producto);
+        detalle.setCantidad(dto.cantidad());
+        detalle.setPrecioUnitario(dto.precioUnitario());
+        detalle.setPrecioCompraHistorico(dto.precioCompraHistorico());
+        detalle.setSubtotal(dto.subtotal());
+        
+        return ResponseEntity.ok(detalleRepository.save(detalle));
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/controllers/LoteAlmacenController.java">
+package com.ferreteria.ferreteria_backend.controllers;
+
+import com.ferreteria.ferreteria_backend.dto.LoteAlmacenDTO;
+import com.ferreteria.ferreteria_backend.entities.LoteAlmacen;
+import com.ferreteria.ferreteria_backend.entities.Producto;
+import com.ferreteria.ferreteria_backend.entities.Proveedor;
+import com.ferreteria.ferreteria_backend.repositories.LoteAlmacenRepository;
+import com.ferreteria.ferreteria_backend.repositories.ProductoRepository;
+import com.ferreteria.ferreteria_backend.repositories.ProveedorRepository;
+import com.ferreteria.ferreteria_backend.services.InventarioService; // <-- EL IMPORT SALVADOR
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/lotes")
+@CrossOrigin(origins = "*")
+public class LoteAlmacenController {
+    
+    @Autowired private LoteAlmacenRepository loteRepository;
+    @Autowired private ProductoRepository productoRepository;
+    @Autowired private ProveedorRepository proveedorRepository;
+    @Autowired private InventarioService inventarioService;
+
+    @GetMapping 
+    public List<LoteAlmacen> obtenerTodos() { 
+        return loteRepository.findAll(); 
+    }
+
+    @PostMapping
+    public ResponseEntity<LoteAlmacen> crearLote(@RequestBody LoteAlmacenDTO dto) {
+        Producto prod = productoRepository.findById(dto.idProducto()).orElseThrow();
+        Proveedor prov = proveedorRepository.findById(dto.idProveedor()).orElseThrow();
+        
+        // 1. Sumamos stock
+        inventarioService.agregarStock(dto.idProducto(), dto.cantidadInicial());
+        
+        // 2. Guardamos el lote
+        LoteAlmacen lote = new LoteAlmacen();
+        lote.setProducto(prod);
+        lote.setProveedor(prov);
+        lote.setCantidadInicial(dto.cantidadInicial());
+        lote.setCantidadDisponible(dto.cantidadDisponible());
+        lote.setPrecioCompra(dto.precioCompra());
+        
+        return ResponseEntity.ok(loteRepository.save(lote));
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/controllers/UsuarioController.java">
+package com.ferreteria.ferreteria_backend.controllers;
+
+import com.ferreteria.ferreteria_backend.dto.UsuarioDTO;
+import com.ferreteria.ferreteria_backend.entities.Rol;
+import com.ferreteria.ferreteria_backend.entities.Usuario;
+import com.ferreteria.ferreteria_backend.repositories.RolRepository;
+import com.ferreteria.ferreteria_backend.repositories.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/usuarios")
+@CrossOrigin(origins = "*")
+public class UsuarioController {
+    
+    @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired private RolRepository rolRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
+
+    @GetMapping 
+    public List<Usuario> obtenerTodos() { 
+        return usuarioRepository.findAll(); 
+    }
+
+    @PostMapping
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody UsuarioDTO dto) {
+        Rol rolAsignado = rolRepository.findById(dto.idRol())
+            .orElseThrow(() -> new RuntimeException("Error: Rol no existe"));
+            
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setRol(rolAsignado);
+        nuevoUsuario.setNombreCompleto(dto.nombreCompleto());
+        nuevoUsuario.setNombreUsuario(dto.nombreUsuario());
+        
+        // ¡ENCRIPTAMOS LA CONTRASEÑA ANTES DE GUARDAR!
+        nuevoUsuario.setContrasena(passwordEncoder.encode(dto.contrasena()));
+        
+        return ResponseEntity.ok(usuarioRepository.save(nuevoUsuario));
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/controllers/ProductoController.java">
+package com.ferreteria.ferreteria_backend.controllers;
+
+import com.ferreteria.ferreteria_backend.dto.ProductoDTO;
+import com.ferreteria.ferreteria_backend.entities.Categoria;
+import com.ferreteria.ferreteria_backend.entities.Producto;
+import com.ferreteria.ferreteria_backend.repositories.CategoriaRepository;
+import com.ferreteria.ferreteria_backend.repositories.ProductoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import jakarta.validation.Valid;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/productos")
+@CrossOrigin(origins = "*")
+public class ProductoController {
+
+    @Autowired 
+    private ProductoRepository productoRepository;
+    
+    @Autowired 
+    private CategoriaRepository categoriaRepository;
+
+    // ==========================================
+    // GET: OBTENER PRODUCTOS PAGINADOS
+    // ==========================================
+    @GetMapping 
+    public Page<Producto> obtenerTodos(@PageableDefault(size = 10) Pageable pageable) { 
+        // El findAll(pageable) hace la magia del LIMIT y OFFSET en Postgres automáticamente
+        return productoRepository.findAll(pageable); 
+    }
+
+    @PostMapping
+    public ResponseEntity<Producto> crearProducto(@Valid @RequestBody ProductoDTO dto) {        
+        // 1. Buscamos la categoría por el ID que nos mandó el DTO
+        Categoria categoriaAsignada = categoriaRepository.findById(dto.idCategoria())
+            .orElseThrow(() -> new RuntimeException("Error: La categoría no existe"));
+
+        // 2. Creamos la entidad vacía y la llenamos
+        Producto nuevoProducto = new Producto();
+        nuevoProducto.setCategoria(categoriaAsignada);
+        nuevoProducto.setNombre(dto.nombre());
+        nuevoProducto.setDescripcion(dto.descripcion());
+        nuevoProducto.setPrecioVentaAct(dto.precioVentaAct());
+        nuevoProducto.setStockTotal(dto.stockTotal());
+
+        // 3. Guardamos y respondemos con un 200 OK
+        return ResponseEntity.ok(productoRepository.save(nuevoProducto));
+    }
+
+    // ==========================================
+    // PUT: ACTUALIZAR UN PRODUCTO EXISTENTE
+    // ==========================================
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable Integer id, @Valid @RequestBody ProductoDTO dto) {
+        // 1. Buscamos si el producto existe
+        Producto productoExistente = productoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Error: Producto no encontrado"));
+
+        // 2. Buscamos la categoría nueva (o la misma)
+        Categoria categoriaAsignada = categoriaRepository.findById(dto.idCategoria())
+            .orElseThrow(() -> new RuntimeException("Error: La categoría no existe"));
+
+        // 3. Actualizamos los datos
+        productoExistente.setCategoria(categoriaAsignada);
+        productoExistente.setNombre(dto.nombre());
+        productoExistente.setDescripcion(dto.descripcion());
+        productoExistente.setPrecioVentaAct(dto.precioVentaAct());
+        productoExistente.setStockTotal(dto.stockTotal());
+
+        // 4. Guardamos los cambios
+        return ResponseEntity.ok(productoRepository.save(productoExistente));
+    }
+
+    // ==========================================
+    // DELETE: ELIMINAR UN PRODUCTO
+    // ==========================================
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarProducto(@PathVariable Integer id) {
+        // Validamos que exista antes de intentar borrarlo
+        productoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Error: Producto no encontrado"));
+            
+        productoRepository.deleteById(id);
+        return ResponseEntity.ok("Producto eliminado con éxito");
+    }
+}
+</file>
+
+<file path="backend/pom.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.1.0</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.ferreteria</groupId>
+	<artifactId>ferreteria-backend</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>ferreteria-backend</name>
+	<description/>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Spring Security para bloquear los endpoints -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- Herramientas para generar y validar JWT (JSON Web Tokens) -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+		<!-- Herramientas para validar DTOs -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+</file>
+
+</files>

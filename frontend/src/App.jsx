@@ -1,40 +1,40 @@
-import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Layout from './components/Layout';
+import Inventario from './pages/Inventario';
 
 function App() {
-  // Aquí guardamos los datos que lleguen del backend
-  const [categorias, setCategorias] = useState([]);
-
-  useEffect(() => {
-    // Le pegamos a la ruta que acabas de probar con el curl
-    fetch('http://localhost:8080/api/categorias')
-      .then(response => response.json())
-      .then(data => {
-        console.log("¡Datos recibidos del back!", data);
-        setCategorias(data);
-      })
-      .catch(error => console.error('Pum, error en la matrix:', error));
-  }, []); // Los corchetes vacíos hacen que esto corra solo una vez al cargar
-
   return (
-    <div style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif', color: 'white' }}>
-      <h1>🔧 Catálogo de Categorías (Pro-Ferretería)</h1>
-      
-      {categorias.length === 0 ? (
-        <p>Cargando datos desde Spring Boot...</p>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-          {categorias.map((cat) => (
-            <div 
-              key={cat.idCategoria} 
-              style={{ padding: '1rem', border: '1px solid #444', borderRadius: '8px', backgroundColor: '#222' }}
-            >
-              <h3 style={{ margin: '0 0 0.5rem 0', color: '#646cff' }}>{cat.nombre}</h3>
-              <p style={{ margin: 0 }}>{cat.descripcion}</p>
+    <BrowserRouter>
+      <Routes>
+        {/* Ruta pública (Sin menú lateral) */}
+        <Route path="/" element={<Login />} />
+        
+        {/* Rutas privadas (Envueltas en el Layout con menú lateral) */}
+        <Route element={<Layout />}>
+          <Route path="/dashboard" element={
+            <div>
+              <h1 style={{ marginTop: 0, color: 'var(--text-main)' }}>Resumen General</h1>
+              <p style={{ color: 'var(--text-muted)' }}>Bienvenido al sistema. Aquí irán las gráficas de BI más adelante.</p>
             </div>
-          ))}
-        </div>
-      )}
-    </div>
+          } />
+          
+          <Route path="/inventario" element={<Inventario />} />
+          
+          <Route path="/ventas" element={
+            <div>
+              <h1 style={{ marginTop: 0, color: 'var(--text-main)' }}>Punto de Venta</h1>
+            </div>
+          } />
+          
+          <Route path="/ventas" element={
+            <div>
+              <h1 style={{ marginTop: 0, color: 'var(--text-main)' }}>Caja / POS</h1>
+            </div>
+          } />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
