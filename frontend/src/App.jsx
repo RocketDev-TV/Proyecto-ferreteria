@@ -4,6 +4,8 @@ import Layout from './components/Layout';
 import Inventario from './pages/Inventario';
 import Ventas from './pages/Ventas';
 import HistorialVentas from './pages/HistorialVentas';
+import Lotes from './pages/Lotes';
+import Proveedores from './pages/Proveedores';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/inventario" element={<Inventario />} />
           <Route path="/ventas" element={<Ventas />} />
           <Route path="/historial" element={<HistorialVentas />} />
+          <Route path="/lotes" element={<Lotes />} />
+          <Route path="/proveedores" element={<Proveedores />} />
         </Route>
       </Routes>
     </BrowserRouter>
