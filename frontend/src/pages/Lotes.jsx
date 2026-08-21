@@ -82,7 +82,7 @@ export default function Lotes() {
       const token = localStorage.getItem('token');
       const payload = {
         idProducto: parseInt(formData.idProducto),
-        idProveedor: parseInt(formData.idProveedor), // <-- ADIÓS AL PARCHE
+        idProveedor: parseInt(formData.idProveedor),
         cantidadInicial: parseFloat(formData.cantidadInicial),
         cantidadDisponible: parseFloat(formData.cantidadInicial),
         precioCompra: parseFloat(formData.precioCompra)
@@ -109,9 +109,16 @@ export default function Lotes() {
     }
   };
 
-  const formatearFecha = (fechaString) => {
-    if (!fechaString) return 'N/A';
-    return new Date(fechaString).toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
+  const formatearFecha = (lote) => {
+    const fechaReal = lote.fechaRegistro; 
+    
+    if (!fechaReal) return 'N/A';
+
+    if (Array.isArray(fechaReal)) {
+      return new Date(fechaReal[0], fechaReal[1] - 1, fechaReal[2]).toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    return new Date(fechaReal).toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
   return (
@@ -190,7 +197,8 @@ export default function Lotes() {
                       <tr key={lote.idLote} style={{ borderBottom: '1px solid var(--border-color)', opacity: agotado ? 0.6 : 1 }}>
                         <td style={{ padding: '16px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                           <strong style={{ color: 'var(--text-main)', display: 'block' }}>Lote #{lote.idLote}</strong>
-                          {formatearFecha(lote.fechaIngreso)}
+                          {/* Y aquí simplemente le mandamos el lote completo a la función */}
+                          {formatearFecha(lote)}
                         </td>
                         <td style={{ padding: '16px', color: 'var(--text-main)', fontWeight: '500' }}>
                           {lote.producto?.nombre} <br/>

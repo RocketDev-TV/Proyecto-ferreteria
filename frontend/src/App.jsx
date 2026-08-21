@@ -7,6 +7,7 @@ import HistorialVentas from './pages/HistorialVentas';
 import Lotes from './pages/Lotes';
 import Proveedores from './pages/Proveedores';
 import Dashboard from './pages/Dashboard';
+import Usuarios from './pages/Usuarios';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/historial" element={<HistorialVentas />} />
           <Route path="/lotes" element={<Lotes />} />
           <Route path="/proveedores" element={<Proveedores />} />
+          <Route path="/usuarios" element={<Usuarios />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -20,15 +20,21 @@ export default function Login() {
       });
 
       if (response.ok) {
-        const token = await response.text();
-        localStorage.setItem('token', token);
-        navigate('/dashboard'); 
+        const data = await response.json(); 
+        
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('nombreCompleto', data.nombreCompleto);
+        localStorage.setItem('rol', data.rol);
+
+        if (data.rol === 'CAJERO') {
+          navigate('/ventas'); 
+        } else {
+          navigate('/dashboard'); 
+        }
       } else {
-        // Mensaje de error formal y corporativo
         setError('Las credenciales proporcionadas son inválidas.');
       }
     } catch (err) {
-      // Mensaje de error de red formal
       setError('Ocurrió un error al intentar conectar con el servidor.');
     }
   };

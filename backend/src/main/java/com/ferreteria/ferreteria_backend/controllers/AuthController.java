@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
@@ -18,11 +21,22 @@ public class AuthController {
     @Autowired private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthDTO dto) {
+    public ResponseEntity<?> login(@RequestBody AuthDTO dto) { // Cambiamos <String> por <?>
         return usuarioRepository.findByNombreUsuario(dto.nombreUsuario())
-            // Compara la contraseña en texto plano del DTO contra el Hash de la BD
             .filter(u -> passwordEncoder.matches(dto.contrasena(), u.getContrasena()))
-            .map(u -> ResponseEntity.ok(jwtUtil.generarToken(u.getNombreUsuario())))
-            .orElseGet(() -> ResponseEntity.status(401).body("Credenciales incorrectas"));
+            .map(u -> {
+                // Armamos el paquete JSON que React está esperando
+                Map<String, String> response = new HashMap<>();
+                response.put("token", jwtUtil.generarToken(u.getNombreUsuario()));
+                response.put("nombreCompleto", u.getNombreCompleto());
+                response.put("rol", u.getRol().getTipoRol());
+                
+                return ResponseEntity.ok(response);
+            })
+            .orElseGet(() -> {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Credenciales incorrectas");
+                return ResponseEntity.status(401).body(error);
+            });
     }
 }

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { 
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, ReferenceLine, Legend 
+} from 'recharts';
 
 // Configuramos el estilo corporativo oscuro para todas las alertas
 const swalApp = Swal.mixin({
@@ -15,6 +18,7 @@ const swalApp = Swal.mixin({
 export default function Inventario() {
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
+  const [lotes, setLotes] = useState([]); // <-- NUEVO: Estado para el historial de lotes
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -39,9 +43,15 @@ export default function Inventario() {
     stockTotal: ''
   });
 
+  // <-- NUEVO: Estados para el Modal Mini-BI -->
+  const [biModalOpen, setBiModalOpen] = useState(false);
+  const [selectedProductBI, setSelectedProductBI] = useState(null);
+  const [productLots, setProductLots] = useState([]);
+
   useEffect(() => {
     fetchProductos(page);
     fetchCategorias();
+    fetchLotes(); // <-- NUEVO: Traemos el historial de compras
   }, [page]);
 
   const fetchProductos = async (paginaActual) => {
@@ -79,6 +89,55 @@ export default function Inventario() {
     } catch (err) {
       console.error('Error al cargar categorías');
     }
+  };
+
+  // <-- NUEVO: Función para traer los lotes -->
+  const fetchLotes = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:8080/api/lotes', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        setLotes(await response.json());
+      }
+    } catch (err) {
+      console.error('Error al cargar historial de lotes');
+    }
+  };
+
+  // ==========================================
+  // MOTOR DEL SEMÁFORO DE RENTABILIDAD
+  // ==========================================
+  const calcularRentabilidad = (producto) => {
+    const lotesDelProducto = lotes.filter(l => l.producto?.idProducto === producto.idProducto);
+    
+    if (lotesDelProducto.length === 0) {
+      return { status: 'UNKNOWN', margen: 0, costo: 0, color: '#4D4D4D', label: 'N/A' };
+    }
+
+    const loteMasReciente = lotesDelProducto.sort((a, b) => b.idLote - a.idLote)[0];
+    const costo = loteMasReciente.precioCompra;
+    const venta = producto.precioVentaAct;
+    const margen = venta > 0 ? ((venta - costo) / venta) * 100 : 0;
+
+    if (margen >= 30) return { status: 'GOOD', margen, costo, color: '#3ECF8E', label: `+${margen.toFixed(1)}%` };
+    if (margen >= 10) return { status: 'WARNING', margen, costo, color: '#F2A900', label: `+${margen.toFixed(1)}%` };
+    return { status: 'DANGER', margen, costo, color: '#ff4444', label: `${margen > 0 ? '+' : ''}${margen.toFixed(1)}%` };
+  };
+
+  const openBIModal = (producto) => {
+    const lotesHistoricos = lotes
+      .filter(l => l.producto?.idProducto === producto.idProducto)
+      .sort((a, b) => {
+        const fechaA = a.fechaRegistro || new Date();
+        const fechaB = b.fechaRegistro || new Date();
+        return new Date(fechaA) - new Date(fechaB);
+      });
+    
+    setSelectedProductBI(producto);
+    setProductLots(lotesHistoricos);
+    setBiModalOpen(true);
   };
 
   // --- LÓGICA DE ORDENAMIENTO ---
@@ -304,8 +363,12 @@ export default function Inventario() {
                   <th onClick={() => requestSort('precioVentaAct')} style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '500', fontSize: '0.85rem', textTransform: 'uppercase', cursor: 'pointer', userSelect: 'none' }}>
                     Precio Venta {getSortIndicator('precioVentaAct')}
                   </th>
-                  <th onClick={() => requestSort('stockTotal')} style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '500', fontSize: '0.85rem', textTransform: 'uppercase', cursor: 'pointer', userSelect: 'none' }}>
+                  <th onClick={() => requestSort('stockTotal')} style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '500', fontSize: '0.85rem', textTransform: 'uppercase', cursor: 'pointer', userSelect: 'none', textAlign: 'center' }}>
                     Stock {getSortIndicator('stockTotal')}
+                  </th>
+                  {/* <-- NUEVO: Columna del Semáforo --> */}
+                  <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '500', fontSize: '0.85rem', textTransform: 'uppercase', textAlign: 'center' }}>
+                    Margen BI
                   </th>
                   <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '500', fontSize: '0.85rem', textTransform: 'uppercase', textAlign: 'center' }}>
                     Acciones
@@ -313,44 +376,66 @@ export default function Inventario() {
                 </tr>
               </thead>
               <tbody>
-                {productosFiltrados.map((producto) => (
-                  <tr key={producto.idProducto} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                    <td style={{ padding: '16px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                      #{producto.idProducto.toString().padStart(4, '0')}
-                    </td>
-                    <td style={{ padding: '16px', color: 'var(--text-main)', fontWeight: '500' }}>
-                      {producto.nombre}
-                    </td>
-                    <td style={{ padding: '16px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                      {producto.categoria.nombre}
-                    </td>
-                    <td style={{ padding: '16px', color: 'var(--text-main)' }}>
-                      ${producto.precioVentaAct.toFixed(2)}
-                    </td>
-                    <td style={{ padding: '16px' }}>
-                      <span style={{ 
-                        padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: '600',
-                        backgroundColor: producto.stockTotal > 10 ? 'rgba(62, 207, 142, 0.1)' : 'rgba(242, 86, 35, 0.1)',
-                        color: producto.stockTotal > 10 ? '#3ECF8E' : 'var(--accent)'
-                      }}>
-                        {producto.stockTotal} und
-                      </span>
-                    </td>
-                    <td style={{ padding: '16px', textAlign: 'center' }}>
-                      <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                        <button onClick={() => openEditModal(producto)} style={{ background: 'none', border: 'none', color: '#47bfff', cursor: 'pointer' }} title="Modificar Producto">
-                          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                {productosFiltrados.map((producto) => {
+                  const rentabilidad = calcularRentabilidad(producto);
+                  return (
+                    <tr key={producto.idProducto} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                      <td style={{ padding: '16px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                        #{producto.idProducto.toString().padStart(4, '0')}
+                      </td>
+                      <td style={{ padding: '16px', color: 'var(--text-main)', fontWeight: '500' }}>
+                        {producto.nombre}
+                      </td>
+                      <td style={{ padding: '16px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                        {producto.categoria.nombre}
+                      </td>
+                      <td style={{ padding: '16px', color: 'var(--text-main)' }}>
+                        ${producto.precioVentaAct.toFixed(2)}
+                      </td>
+                      <td style={{ padding: '16px', textAlign: 'center' }}>
+                        <span style={{ 
+                          padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: '600',
+                          backgroundColor: producto.stockTotal > 10 ? 'rgba(62, 207, 142, 0.1)' : 'rgba(242, 86, 35, 0.1)',
+                          color: producto.stockTotal > 10 ? '#3ECF8E' : 'var(--accent)'
+                        }}>
+                          {producto.stockTotal} und
+                        </span>
+                      </td>
+                      {/* <-- NUEVO: Celda del Semáforo --> */}
+                      <td style={{ padding: '16px', textAlign: 'center' }}>
+                        <button 
+                          onClick={() => openBIModal(producto)}
+                          title="Ver análisis de rentabilidad"
+                          style={{ 
+                            backgroundColor: `${rentabilidad.color}20`,
+                            color: rentabilidad.color,
+                            border: `1px solid ${rentabilidad.color}50`,
+                            padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold',
+                            cursor: rentabilidad.status === 'UNKNOWN' ? 'default' : 'pointer', 
+                            transition: 'all 0.2s', display: 'inline-flex', alignItems: 'center', gap: '6px'
+                          }}
+                          disabled={rentabilidad.status === 'UNKNOWN'}
+                        >
+                          <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: rentabilidad.color }}></span>
+                          {rentabilidad.label}
                         </button>
-                        <button onClick={() => handleDeleteRequest(producto)} style={{ background: 'none', border: 'none', color: producto.stockTotal > 0 ? 'var(--border-color)' : '#ff4444', cursor: producto.stockTotal > 0 ? 'not-allowed' : 'pointer' }} title="Eliminar del Sistema">
-                          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td style={{ padding: '16px', textAlign: 'center' }}>
+                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                          <button onClick={() => openEditModal(producto)} style={{ background: 'none', border: 'none', color: '#47bfff', cursor: 'pointer' }} title="Modificar Producto">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                          </button>
+                          <button onClick={() => handleDeleteRequest(producto)} style={{ background: 'none', border: 'none', color: producto.stockTotal > 0 ? 'var(--border-color)' : '#ff4444', cursor: producto.stockTotal > 0 ? 'not-allowed' : 'pointer' }} title="Eliminar del Sistema">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
                 {productosFiltrados.length === 0 && (
                   <tr>
-                    <td colSpan="6" style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    <td colSpan="7" style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
                       No se encontraron registros que coincidan con los criterios de búsqueda.
                     </td>
                   </tr>
@@ -421,6 +506,78 @@ export default function Inventario() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* <-- NUEVO: MODAL MINI-BI: ANÁLISIS DE RENTABILIDAD --> */}
+      {biModalOpen && selectedProductBI && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 2000 }}>
+          <div style={{ backgroundColor: 'var(--bg-panel)', padding: '32px', borderRadius: '12px', border: '1px solid var(--border-color)', width: '100%', maxWidth: '700px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+              <div>
+                <h2 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.4rem' }}>Análisis de Rentabilidad</h2>
+                <p style={{ margin: '4px 0 0 0', color: 'var(--accent)', fontWeight: 'bold' }}>{selectedProductBI.nombre}</p>
+              </div>
+              <button onClick={() => setBiModalOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
+            </div>
+
+            {productLots.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>No hay historial de compras para este producto.</div>
+            ) : (
+              <>
+                {/* KPIs del Modal */}
+                <div style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
+                  <div style={{ flex: 1, backgroundColor: 'var(--bg-main)', padding: '16px', borderRadius: '8px', borderLeft: '4px solid #47bfff' }}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Precio Venta Fijo</div>
+                    <div style={{ fontSize: '1.5rem', color: 'var(--text-main)', fontWeight: 'bold' }}>${selectedProductBI.precioVentaAct.toFixed(2)}</div>
+                  </div>
+                  <div style={{ flex: 1, backgroundColor: 'var(--bg-main)', padding: '16px', borderRadius: '8px', borderLeft: '4px solid #F25623' }}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Último Costo Prov.</div>
+                    <div style={{ fontSize: '1.5rem', color: 'var(--text-main)', fontWeight: 'bold' }}>${productLots[productLots.length - 1].precioCompra.toFixed(2)}</div>
+                  </div>
+                  <div style={{ flex: 1, backgroundColor: 'var(--bg-main)', padding: '16px', borderRadius: '8px', borderLeft: `4px solid ${calcularRentabilidad(selectedProductBI).color}` }}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Margen Actual</div>
+                    <div style={{ fontSize: '1.5rem', color: calcularRentabilidad(selectedProductBI).color, fontWeight: 'bold' }}>{calcularRentabilidad(selectedProductBI).label}</div>
+                  </div>
+                </div>
+
+                {/* Gráfica de Fluctuación */}
+                <h3 style={{ margin: '0 0 16px 0', color: 'var(--text-main)', fontSize: '1rem' }}>Fluctuación del Costo de Compra</h3>
+                <div style={{ width: '100%', height: '250px', backgroundColor: 'var(--bg-main)', padding: '16px', borderRadius: '8px' }}>
+                  <ResponsiveContainer>
+                    <LineChart data={productLots.map((l, index) => {
+                      let fechaReal = l.fechaRegistro || new Date();
+                      
+                      if (Array.isArray(fechaReal)) {
+                        fechaReal = new Date(fechaReal[0], fechaReal[1] - 1, fechaReal[2]);
+                      }
+
+                      return {
+                        fecha: new Date(fechaReal).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }) + (productLots.length > 1 ? ` (Lote ${index + 1})` : ''),
+                        CostoProveedor: l.precioCompra || 0
+                      };
+                    })} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#4D4D4D" vertical={false} />
+                      <XAxis dataKey="fecha" stroke="#999" fontSize={11} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#999" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(val) => `$${val}`} />
+                      
+                      {/* CORRECCIÓN DEL TOOLTIP AQUÍ */}
+                      <RechartsTooltip 
+                        contentStyle={{ backgroundColor: '#2A2A2A', borderColor: '#4D4D4D', color: '#DEDEDE', borderRadius: '8px' }}
+                        formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Costo Proveedor']}
+                      />
+                      <Legend wrapperStyle={{ fontSize: '0.85rem' }} />
+                      
+                      <ReferenceLine y={selectedProductBI.precioVentaAct} stroke="#ff4444" strokeDasharray="5 5" label={{ position: 'top', value: 'PRECIO VENTA AL PÚBLICO', fill: '#ff4444', fontSize: 10 }} />
+                      
+                      <Line type="monotone" name="Costo Proveedor" dataKey="CostoProveedor" stroke="#F25623" strokeWidth={3} dot={{ r: 5, fill: 'var(--bg-main)', strokeWidth: 2 }} activeDot={{ r: 8, fill: '#F25623' }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
