@@ -1,4 +1,22 @@
--- 1. Catálogos Base
+-- ==========================================
+-- 0. LIMPIEZA PROFUNDA (DESTRUCCIÓN)
+-- ==========================================
+DROP TABLE IF EXISTS Detalle_ordenes_compra CASCADE;
+DROP TABLE IF EXISTS Ordenes_compra CASCADE;
+DROP TABLE IF EXISTS Detalle_Venta CASCADE;
+DROP TABLE IF EXISTS Historial_Ventas CASCADE;
+DROP TABLE IF EXISTS Lotes_Almacen CASCADE;
+DROP TABLE IF EXISTS Productos CASCADE;
+DROP TABLE IF EXISTS Usuarios CASCADE;
+DROP TABLE IF EXISTS Proveedores CASCADE;
+DROP TABLE IF EXISTS Categorias CASCADE;
+DROP TABLE IF EXISTS Roles CASCADE;
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- ==========================================
+-- 1. CATÁLOGOS BASE
+-- ==========================================
 CREATE TABLE Roles (
     id_rol SERIAL PRIMARY KEY,
     tipo_rol VARCHAR(50) NOT NULL,
@@ -19,17 +37,18 @@ CREATE TABLE Proveedores (
     direccion TEXT
 );
 
--- 2. Usuarios
+-- ==========================================
+-- 2. USUARIOS Y PRODUCTOS
+-- ==========================================
 CREATE TABLE Usuarios (
     id_usuario SERIAL PRIMARY KEY,
     id_rol INT NOT NULL,
     nombre_completo VARCHAR(70) NOT NULL,
     nombre_usuario VARCHAR(70) UNIQUE NOT NULL,
-    contrasena VARCHAR(255) NOT NULL, -- Aquí va a caer el hash de BCrypt
+    contrasena VARCHAR(255) NOT NULL,
     CONSTRAINT fk_rol FOREIGN KEY (id_rol) REFERENCES Roles(id_rol)
 );
 
--- 3. Productos (Catálogo Central)
 CREATE TABLE Productos (
     id_producto SERIAL PRIMARY KEY,
     id_categoria INT NOT NULL,
@@ -40,7 +59,9 @@ CREATE TABLE Productos (
     CONSTRAINT fk_categoria FOREIGN KEY (id_categoria) REFERENCES Categorias(id_categoria)
 );
 
--- 4. El Kardex / Lotes (El control de costos e inventario)
+-- ==========================================
+-- 3. TRANSACCIONES EXISTENTES
+-- ==========================================
 CREATE TABLE Lotes_Almacen (
     id_lote SERIAL PRIMARY KEY,
     id_producto INT NOT NULL,
@@ -53,7 +74,6 @@ CREATE TABLE Lotes_Almacen (
     CONSTRAINT fk_proveedor_lote FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor)
 );
 
--- 5. Ventas (Cabecera)
 CREATE TABLE Historial_Ventas (
     id_venta SERIAL PRIMARY KEY,
     id_usuario INT NOT NULL,
@@ -62,7 +82,6 @@ CREATE TABLE Historial_Ventas (
     CONSTRAINT fk_usuario_venta FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
 );
 
--- 6. Detalle de Ventas (El motor de la analítica)
 CREATE TABLE Detalle_Venta (
     id_detalle SERIAL PRIMARY KEY,
     id_venta INT NOT NULL,
@@ -76,10 +95,33 @@ CREATE TABLE Detalle_Venta (
 );
 
 -- ==========================================
--- INYECCIÓN DE DATOS DE PRUEBA (CATÁLOGOS)
+-- 4. ¡NUEVO! ÓRDENES DE COMPRA
 -- ==========================================
+CREATE TABLE Ordenes_compra (
+    id_orden SERIAL PRIMARY KEY,
+    id_proveedor INT NOT NULL,
+    estado VARCHAR(30) NOT NULL DEFAULT 'BORRADOR',
+    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_recepcion TIMESTAMP,
+    total_estimado NUMERIC(10,2) NOT NULL DEFAULT 0,
+    CONSTRAINT fk_proveedor_orden FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor)
+);
 
--- Datos para Categorias
+CREATE TABLE Detalle_ordenes_compra (
+    id_detalle_orden SERIAL PRIMARY KEY,
+    id_orden INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad_solicitada NUMERIC(10,3) NOT NULL,
+    cantidad_recibida NUMERIC(10,3) NOT NULL DEFAULT 0,
+    precio_unitario_esperado NUMERIC(10,2) NOT NULL,
+    subtotal NUMERIC(10,2) NOT NULL,
+    CONSTRAINT fk_orden_detalle FOREIGN KEY (id_orden) REFERENCES Ordenes_compra(id_orden) ON DELETE CASCADE,
+    CONSTRAINT fk_producto_orden FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
+);
+
+-- ==========================================
+-- 5. INYECCIÓN DE DATOS DE PRUEBA
+-- ==========================================
 INSERT INTO Categorias (nombre, descripcion) VALUES 
 ('Herramienta Manual', 'Martillos, desarmadores, pinzas y llaves'),
 ('Herramienta Eléctrica', 'Taladros, esmeriladoras, sierras y pulidoras'),
@@ -87,44 +129,42 @@ INSERT INTO Categorias (nombre, descripcion) VALUES
 ('Plomería', 'Tubos, conexiones, válvulas y grifería'),
 ('Material Eléctrico', 'Cables, focos, contactos y pastillas termomagnéticas');
 
--- Datos para Roles
 INSERT INTO Roles (tipo_rol, descripcion) VALUES 
 ('ADMIN', 'Administrador total del sistema, acceso a Kárdex y reportes'),
 ('CAJERO', 'Encargado de punto de venta y atención a cliente'),
 ('ALMACENISTA', 'Encargado de recepción de lotes y control de stock');
 
--- Datos para Proveedores
 INSERT INTO Proveedores (nombre, numero, correo, direccion) VALUES 
 ('Truper S.A. de C.V.', '555-123-4567', 'ventas@truper.com', 'Parque Industrial, CDMX'),
 ('Cemex', '555-987-6543', 'contacto@cemex.com', 'Av. Concreto 100, Monterrey'),
 ('Comex', '555-456-7890', 'distribucion@comex.com.mx', 'Plaza Colores, Guadalajara');
 
--- ==========================================
--- INYECCIÓN DE DATOS DE PRUEBA (TRANSACCIONAL)
--- ==========================================
-
--- Datos para Usuarios (Asignando el Rol 1: ADMIN)
--- Nota: La contraseña está en texto plano solo para pruebas locales, en prod iría el hash de BCrypt
 INSERT INTO Usuarios (id_rol, nombre_completo, nombre_usuario, contrasena) VALUES 
-(1, 'Administrador Principal', 'admin_master', 'admin123'),
-(2, 'Juan Perez', 'cajero_juan', 'cajero123');
+(1, 'Administrador Principal', 'admin_master', crypt('admin123', gen_salt('bf'))),
+(2, 'Juan Perez', 'cajero_juan', crypt('cajero123', gen_salt('bf')));
 
--- Datos para Productos (Asignando Categorías que ya existen)
 INSERT INTO Productos (id_categoria, nombre, descripcion, precio_venta_act, stock_total) VALUES 
 (1, 'Martillo de Uña Curva 16 oz', 'Martillo truper mango de fibra de vidrio', 185.50, 50.000),
 (2, 'Taladro Percutor 1/2', 'Taladro profesional 600W', 850.00, 15.000),
 (3, 'Pintura Blanca Vinílica 19L', 'Cubeta de pintura blanca para interiores', 1200.00, 10.000);
 
--- Datos para Lotes de Almacén (Simulando la entrada de mercancía de los proveedores)
 INSERT INTO Lotes_Almacen (id_producto, id_proveedor, cantidad_inicial, cantidad_disponible, precio_compra) VALUES 
-(1, 1, 50.000, 50.000, 120.00), -- Martillos surtidos por Truper
-(3, 3, 10.000, 10.000, 800.00); -- Pinturas surtidas por Comex
+(1, 1, 50.000, 50.000, 120.00),
+(3, 3, 10.000, 10.000, 800.00);
 
--- Datos para Historial_Ventas (Un ticket de venta del cajero 2)
 INSERT INTO Historial_Ventas (id_usuario, total_venta) VALUES 
 (2, 1035.50);
 
--- Datos para Detalle_Venta (Lo que trae adentro el ticket anterior)
 INSERT INTO Detalle_Venta (id_venta, id_producto, cantidad, precio_unitario, precio_compra_historico, subtotal) VALUES 
-(1, 1, 1.000, 185.50, 120.00, 185.50), -- 1 Martillo
-(1, 2, 1.000, 850.00, 600.00, 850.00); -- 1 Taladro
+(1, 1, 1.000, 185.50, 120.00, 185.50),
+(1, 2, 1.000, 850.00, 600.00, 850.00);
+
+-- Órdenes Pendientes de Prueba (Para que React las vea en la pestaña de Tránsito)
+INSERT INTO Ordenes_compra (id_proveedor, estado, total_estimado) VALUES 
+(1, 'ENVIADA', 12500.00),
+(3, 'ENVIADA', 4000.00);
+
+INSERT INTO Detalle_ordenes_compra (id_orden, id_producto, cantidad_solicitada, precio_unitario_esperado, subtotal) VALUES 
+(1, 1, 50.000, 120.00, 6000.00),
+(1, 2, 5.000, 600.00, 3000.00),
+(2, 3, 5.000, 800.00, 4000.00);
