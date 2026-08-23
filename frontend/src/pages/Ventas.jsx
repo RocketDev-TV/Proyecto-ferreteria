@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { API_URL } from '../config';
 
 const swalApp = Swal.mixin({
   background: '#2A2A2A',
@@ -25,7 +26,7 @@ export default function Ventas() {
     try {
       const token = localStorage.getItem('token');
       // Traemos un bloque grande de productos para tenerlos listos en el POS
-      const response = await fetch('http://localhost:8080/api/productos?page=0&size=50', {
+      const response = await fetch('${API_URL}/api/productos?page=0&size=50', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -97,7 +98,7 @@ export default function Ventas() {
       const totalVenta = carrito.reduce((sum, item) => sum + item.subtotal, 0);
 
       // 1. Registrar la Cabecera de la Venta
-      const ventaRes = await fetch('http://localhost:8080/api/ventas', {
+      const ventaRes = await fetch('${API_URL}/api/ventas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ idUsuario: 2, totalVenta: totalVenta })
@@ -108,7 +109,7 @@ export default function Ventas() {
 
       // 2. Registrar Detalles y Descontar Stock
       for (const item of carrito) {
-        await fetch('http://localhost:8080/api/ventas/detalles', {
+        await fetch('${API_URL}/api/ventas/detalles', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({

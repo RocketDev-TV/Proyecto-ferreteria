@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { API_URL } from '../config';
 
 const swalApp = Swal.mixin({
   background: '#2A2A2A',
@@ -17,12 +18,11 @@ export default function Usuarios() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   
-  // ¡NOMBRES ALINEADOS AL UsuarioDTO DE SPRING BOOT!
   const [formData, setFormData] = useState({
     nombreCompleto: '',
     nombreUsuario: '', 
     contrasena: '',
-    idRol: 2 // Asumiendo que 2 es Cajero en tu BD
+    idRol: 2
   });
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function Usuarios() {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/usuarios', {
+      const response = await fetch(`${API_URL}/api/usuarios`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -85,7 +85,7 @@ export default function Usuarios() {
     if (result.isConfirmed) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/usuarios/${id}`, {
+        const response = await fetch(`${API_URL}/api/usuarios/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -119,8 +119,8 @@ export default function Usuarios() {
     try {
       const token = localStorage.getItem('token');
       const url = editingUser 
-        ? `http://localhost:8080/api/usuarios/${editingUser.idUsuario}` 
-        : 'http://localhost:8080/api/usuarios';
+        ? `${API_URL}/api/usuarios/${editingUser.idUsuario}` 
+        : `${API_URL}/api/usuarios`;
       
       const response = await fetch(url, {
         method: editingUser ? 'PUT' : 'POST',

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { API_URL } from '../config';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, ReferenceLine, Legend 
 } from 'recharts';
@@ -59,7 +60,7 @@ export default function Inventario() {
     setError('');
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:8080/api/productos?page=${paginaActual}&size=10`, {
+      const response = await fetch(`${API_URL}/api/productos?page=${paginaActual}&size=10`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -79,7 +80,7 @@ export default function Inventario() {
   const fetchCategorias = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/categorias', {
+      const response = await fetch(`${API_URL}/api/categorias`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -95,7 +96,7 @@ export default function Inventario() {
   const fetchLotes = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/lotes', {
+      const response = await fetch(`${API_URL}/api/lotes`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -188,8 +189,8 @@ export default function Inventario() {
       };
 
       const url = editingProduct 
-        ? `http://localhost:8080/api/productos/${editingProduct.idProducto}` 
-        : 'http://localhost:8080/api/productos';
+        ? `${API_URL}/api/productos/${editingProduct.idProducto}` 
+        : `${API_URL}/api/productos`;
       const method = editingProduct ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -254,7 +255,7 @@ export default function Inventario() {
       if (result.isConfirmed) {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch(`http://localhost:8080/api/productos/${producto.idProducto}`, {
+          const response = await fetch(`${API_URL}/api/productos/${producto.idProducto}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
           });

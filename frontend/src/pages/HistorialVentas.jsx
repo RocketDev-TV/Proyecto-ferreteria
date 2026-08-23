@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { API_URL } from '../config';
 
 const swalApp = Swal.mixin({
   background: '#2A2A2A',
@@ -35,8 +36,8 @@ export default function HistorialVentas() {
       const headers = { 'Authorization': `Bearer ${token}` };
 
       const [ventasRes, detallesRes] = await Promise.all([
-        fetch('http://localhost:8080/api/ventas', { headers }),
-        fetch('http://localhost:8080/api/ventas/detalles', { headers })
+        fetch(`${API_URL}/api/ventas`, { headers }),
+        fetch(`${API_URL}/api/ventas/detalles`, { headers })
       ]);
 
       if (ventasRes.ok && detallesRes.ok) {

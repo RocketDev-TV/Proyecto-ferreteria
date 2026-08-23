@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { API_URL } from '../config';
 
 const swalApp = Swal.mixin({
   background: '#2A2A2A',
@@ -43,10 +44,10 @@ export default function Lotes() {
       const headers = { 'Authorization': `Bearer ${token}` };
 
       const [prodRes, lotesRes, provRes, ordRes] = await Promise.all([
-        fetch('http://localhost:8080/api/productos?page=0&size=100', { headers }),
-        fetch('http://localhost:8080/api/lotes', { headers }),
-        fetch('http://localhost:8080/api/proveedores', { headers }),
-        fetch('http://localhost:8080/api/ordenes/pendientes', { headers })
+        fetch(`${API_URL}/api/productos?page=0&size=100`, { headers }),
+        fetch(`${API_URL}/api/lotes`, { headers }),
+        fetch(`${API_URL}/api/proveedores`, { headers }),
+        fetch(`${API_URL}/api/ordenes/pendientes`, { headers })
       ]);
 
       if (prodRes.ok) setProductos((await prodRes.json()).content || await prodRes.json());
@@ -81,7 +82,7 @@ export default function Lotes() {
         precioCompra: parseFloat(formData.precioCompra)
       };
 
-      const response = await fetch('http://localhost:8080/api/lotes', {
+      const response = await fetch(`${API_URL}/api/lotes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(payload)
@@ -114,7 +115,7 @@ export default function Lotes() {
     if (result.isConfirmed) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/ordenes/${orden.idOrden}/recibir`, {
+        const response = await fetch(`${API_URL}/api/ordenes/${orden.idOrden}/recibir`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -173,7 +174,7 @@ export default function Lotes() {
         }))
       };
 
-      const response = await fetch('http://localhost:8080/api/ordenes/crear', {
+      const response = await fetch(`${API_URL}/api/ordenes/crear`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(payload)

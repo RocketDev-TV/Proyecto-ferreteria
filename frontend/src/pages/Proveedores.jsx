@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { API_URL } from '../config';
 
 const swalApp = Swal.mixin({
   background: '#2A2A2A',
@@ -31,7 +32,7 @@ export default function Proveedores() {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/proveedores', {
+      const response = await fetch(`${API_URL}/api/proveedores`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -80,7 +81,7 @@ export default function Proveedores() {
     if (result.isConfirmed) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/proveedores/${id}`, {
+        const response = await fetch(`${API_URL}/api/proveedores/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -104,8 +105,8 @@ export default function Proveedores() {
     try {
       const token = localStorage.getItem('token');
       const url = editingProv 
-        ? `http://localhost:8080/api/proveedores/${editingProv.idProveedor}` 
-        : 'http://localhost:8080/api/proveedores';
+        ? `${API_URL}/api/proveedores/${editingProv.idProveedor}` 
+        : `${API_URL}/api/proveedores`;
       
       const response = await fetch(url, {
         method: editingProv ? 'PUT' : 'POST',

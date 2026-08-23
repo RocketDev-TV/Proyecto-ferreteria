@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend,
   BarChart, Bar, LabelList
@@ -21,9 +22,9 @@ export default function Dashboard() {
       const headers = { 'Authorization': `Bearer ${token}` };
 
       const [ventasRes, detallesRes, prodRes] = await Promise.all([
-        fetch('http://localhost:8080/api/ventas', { headers }),
-        fetch('http://localhost:8080/api/ventas/detalles', { headers }),
-        fetch('http://localhost:8080/api/productos?page=0&size=1000', { headers })
+        fetch(`${API_URL}/api/ventas`, { headers }),
+        fetch(`${API_URL}/api/ventas/detalles`, { headers }),
+        fetch(`${API_URL}/api/productos?page=0&size=1000`, { headers })
       ]);
 
       if (ventasRes.ok && detallesRes.ok && prodRes.ok) {
