@@ -26,7 +26,7 @@ export default function Ventas() {
     try {
       const token = localStorage.getItem('token');
       // Traemos un bloque grande de productos para tenerlos listos en el POS
-      const response = await fetch('${API_URL}/api/productos?page=0&size=50', {
+      const response = await fetch(`${API_URL}/api/productos?page=0&size=50`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
