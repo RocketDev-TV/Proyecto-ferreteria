@@ -28,7 +28,10 @@ services:
     # depends_on: db <- (Opcional: puedes quitar esto si vas a usar Supabase 100% del tiempo, pero déjalo si usan el local)
 
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL}
     container_name: ferreteria-frontend
     restart: always
     ports:
