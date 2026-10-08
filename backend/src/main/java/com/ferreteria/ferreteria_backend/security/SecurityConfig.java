@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 public class SecurityConfig {
@@ -24,32 +25,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configure(http))
+            .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll() // Puerta abierta para loguearse
+                .requestMatchers("/api/auth/**").permitAll() 
                 .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
-                .anyRequest().authenticated() // TODO lo demás, exige token
-            )
-            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        // Metemos al cadenero antes de procesar cualquier cosa
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated() 
             )
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }

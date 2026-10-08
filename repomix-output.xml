@@ -1073,51 +1073,6 @@ public class JwtFilter extends OncePerRequestFilter {
 }
 </file>
 
-<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/security/JwtUtil.java">
-package com.ferreteria.ferreteria_backend.security;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.stereotype.Component;
-import java.security.Key;
-import java.util.Date;
-
-@Component
-public class JwtUtil {
-    //private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-    @Value("${jwt.secret:defaultSecretKeyMuyLargaDeMinimo32CaracteresParaProduccion}")
-    private String secretString;
-
-    private Key getSecretKey() {
-        return Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public String generarToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Dura 10 horas
-                .signWith(SECRET_KEY)
-                .compact();
-    }
-
-    public String extraerUsuario(String token) {
-        return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public boolean validarToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            return false; // Si caducó o lo inventaron, rebota
-        }
-    }
-}
-</file>
-
 <file path="backend/src/main/java/com/ferreteria/ferreteria_backend/services/InventarioService.java">
 package com.ferreteria.ferreteria_backend.services;
 
@@ -1950,17 +1905,6 @@ Write-Output "MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD"
 }
 </file>
 
-<file path="frontend/src/config.js">
-// Si estás programando en tu compu (localhost), usa la ruta local.
-// Si alguien entra desde la URL pública, usa la ruta segura (HTTPS) en el puerto 8443
-/*export const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8080' 
-    : `https://${window.location.hostname}:8443`;
-*/
-
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-</file>
-
 <file path="frontend/src/main.jsx">
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -2238,57 +2182,47 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 }
 </file>
 
-<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/security/SecurityConfig.java">
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/security/JwtUtil.java">
 package com.ferreteria.ferreteria_backend.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.http.HttpMethod;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
+import java.security.Key;
+import java.util.Date;
 
-@Configuration
-public class SecurityConfig {
+@Component
+public class JwtUtil {
+    //private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    @Autowired private JwtFilter jwtFilter;
+    @Value("${jwt.secret:defaultSecretKeyMuyLargaDeMinimo32CaracteresParaProduccion}")
+    private String secretString;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    private Key getSecretKey() {
+        return Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configure(http))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll() // Puerta abierta para loguearse
-                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
-                .anyRequest().authenticated() // TODO lo demás, exige token
-            )
-            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        // Metemos al cadenero antes de procesar cualquier cosa
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+    public String generarToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Dura 10 horas
+                .signWith(getSecretKey())
+                .compact();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://tu-dominio.vercel.app"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public String extraerUsuario(String token) {
+        return Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public boolean validarToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
 </file>
@@ -3445,6 +3379,17 @@ export default function Usuarios() {
 }
 </file>
 
+<file path="frontend/src/config.js">
+// Si estás programando en tu compu (localhost), usa la ruta local.
+// Si alguien entra desde la URL pública, usa la ruta segura (HTTPS) en el puerto 8443
+/*export const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8080' 
+    : `https://${window.location.hostname}:8443`;
+*/
+
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+</file>
+
 <file path="frontend/src/index.css">
 :root {
   /* Tu Paleta Oficial */
@@ -3728,6 +3673,64 @@ public class ProveedorController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+}
+</file>
+
+<file path="backend/src/main/java/com/ferreteria/ferreteria_backend/security/SecurityConfig.java">
+package com.ferreteria.ferreteria_backend.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpMethod;
+
+@Configuration
+public class SecurityConfig {
+
+    @Autowired private JwtFilter jwtFilter;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configure(http))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll() // Puerta abierta para loguearse
+                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                .anyRequest().authenticated() // TODO lo demás, exige token
+            )
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // Metemos al cadenero antes de procesar cualquier cosa
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 }
 </file>

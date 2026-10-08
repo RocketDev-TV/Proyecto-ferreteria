@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
+import logo from '../assets/logo.png';
 
 export default function Layout() {
   const location = useLocation();
@@ -75,8 +76,11 @@ export default function Layout() {
     <div style={{ display: 'flex', height: '100vh', backgroundColor: 'var(--bg-main)' }}>
       {/* SIDEBAR */}
       <aside style={{ width: '260px', backgroundColor: 'var(--bg-panel)', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '24px', borderBottom: '1px solid var(--border-color)' }}>
-          <h2 style={{ margin: 0, color: 'var(--accent)', fontSize: '1.2rem', letterSpacing: '1px' }}>PRO-FERRETERÍA</h2>
+        <div style={{ padding: '24px', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <img src={logo} alt="Logo" style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} />
+          <h2 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.2rem', letterSpacing: '0.5px', lineHeight: '1.2', fontWeight: 'bold' }}>
+            FERRETERÍA<br/><span style={{ color: 'var(--accent)' }}>105</span>
+          </h2>
         </div>
         
         <nav style={{ padding: '24px 12px', flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>

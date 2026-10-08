@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
+import logo from '../assets/logo.png';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -42,11 +43,17 @@ export default function Login() {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw', backgroundColor: 'var(--bg-main)' }}>
-      <div style={{ backgroundColor: 'var(--bg-panel)', padding: '40px', borderRadius: '12px', border: '1px solid var(--border-color)', width: '100%', maxWidth: '400px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+      {/* Sombra más ligera para el tema claro */}
+      <div style={{ backgroundColor: 'var(--bg-panel)', padding: '40px', borderRadius: '12px', border: '1px solid var(--border-color)', width: '100%', maxWidth: '400px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
         
-        <h2 style={{ color: 'var(--text-main)', textAlign: 'center', marginBottom: '8px' }}>Bienvenido</h2>
-        <p style={{ color: 'var(--accent)', textAlign: 'center', marginBottom: '32px', fontWeight: 'bold' }}>PRO-FERRETERÍA</p>
+        {/* Logo completo sin recortes CSS */}
+        <img src={logo} alt="Ferretería 105 Logo" style={{ width: '130px', height: 'auto', display: 'block', margin: '0 auto 16px' }} />
         
+        <h2 style={{ color: 'var(--text-main)', textAlign: 'center', marginBottom: '4px', fontSize: '1.6rem', fontWeight: 'bold' }}>Bienvenido</h2>
+        <p style={{ color: 'var(--text-muted)', textAlign: 'center', marginBottom: '32px', fontSize: '0.85rem', fontWeight: '500', letterSpacing: '0.5px' }}>
+          SISTEMA DE GESTIÓN <span style={{ color: 'var(--accent)', fontWeight: 'bold' }}>FERRETERÍA 105</span>
+        </p>
+
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Input de Usuario */}
           <input 
